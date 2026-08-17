@@ -1,0 +1,15 @@
+## Maven / Java build artifacts
+target/
+*.class
+
+## Gradle build artifacts (samples/gradle-consumer)
+.gradle/
+build/
+
+## IDE
+.idea/
+*.iml
+.vs/
+
+## OS
+.DS_Store

@@ -1,0 +1,26 @@
+// Prova de consumo real do artefato com.ishtaran:ishtaran-java via Gradle (mavenLocal()) — a
+// segunda metade obrigatória do "package dry run" do brief do SDK Program (o brief exige tanto
+// um consumidor Maven quanto um consumidor Gradle, já que o artefato Maven serve os dois).
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.ishtaran:ishtaran-java:1.0.0-SNAPSHOT'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+application {
+    mainClass = 'com.ishtaran.samples.GradleConsumerSmokeTest'
+}

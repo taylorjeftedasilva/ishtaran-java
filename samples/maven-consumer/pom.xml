@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        Projeto de amostra FORA do reactor do SDK — existe só para provar que o artefato Maven
+        real (ishtaran-java, instalado no .m2 local via `mvn install`) é consumível por um projeto
+        Maven comum, como exige o "package dry run" do brief do SDK Program (nunca publicação real,
+        só instalação local + consumo).
+    -->
+    <groupId>com.ishtaran.samples</groupId>
+    <artifactId>maven-consumer</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.ishtaran</groupId>
+            <artifactId>ishtaran-java</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>
