@@ -1,8 +1,7 @@
 # Features
 
-Derived from [`SDK_FEATURE_MATRIX.md`](../../SDK_FEATURE_MATRIX.md) (source of truth shared
-across the 4 languages). This file is the Java-specific summary — for the route-by-route detail,
-see the root document.
+Derived from the real API contract (see the [API Reference](https://ishtaran.com/docs/api/ishtaran-api)),
+the same source of truth shared across the 4 languages.
 
 ## Status (2026-08-17)
 

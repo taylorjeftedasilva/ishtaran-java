@@ -3,9 +3,11 @@
 Official Java SDK for the [Ishtaran API](https://ishtaran.com) — a programmable financial
 platform (virtual accounts, conditional release flows, settlements and on-chain withdrawals).
 
-**Status:** reference implementation of the [Ishtaran Official SDK Program](../../SDK_CAPABILITY_SPEC.md)
-(Java → TypeScript → Python → Go). See [`JAVA_SDK_CHECKPOINT.md`](../../JAVA_SDK_CHECKPOINT.md) at
-the repository root for the exact completion state.
+**Status:** reference implementation of the Ishtaran Official SDK Program
+(Java → TypeScript → Python → Go), 100% functional parity across all four. See also:
+[TypeScript/Node.js](https://github.com/taylorjeftedasilva/ishtaran-node) ·
+[Python](https://github.com/taylorjeftedasilva/ishtaran-python) ·
+[Go](https://github.com/taylorjeftedasilva/ishtaran-go).
 
 ## Two layers, same backend
 
@@ -14,9 +16,10 @@ the repository root for the exact completion state.
   to understand the whole API surface. Never duplicates business logic — only combines Core
   calls.
 - **Core API** — `client.accounts()`, `client.transactions()`, `client.withdrawals()`, etc.:
-  granular access to exactly the same 90 real API endpoints (see
-  [`SDK_FEATURE_MATRIX.md`](../../SDK_FEATURE_MATRIX.md)), with nothing invented beyond what the
-  real API exposes.
+  granular access to exactly the same real API endpoints (see the
+  [API Reference](https://ishtaran.com/docs/api/ishtaran-api) /
+  [raw OpenAPI](https://ishtaran.com/openapi.json)), with nothing invented beyond what the real
+  API exposes.
 - **AccountHolders** — `client.accountHolders()`: self-service for the financial holder's global
   identity (`DEC-032`) — `signUp`/`login`/`me`/`claimInvitation`/`signUpAndClaimInvitation`.
   Isolated session: never shares a token with `client.auth()` (Member) nor with the
@@ -57,17 +60,17 @@ for (var leg : signingRequest.legs()) {
 }
 ```
 
-See [`examples/Example13SelfCustodySigning.java`](../../sdks/java/examples/src/main/java/com/ishtaran/examples/Example13SelfCustodySigning.java)
+See [`examples/Example13SelfCustodySigning.java`](examples/src/main/java/com/ishtaran/examples/Example13SelfCustodySigning.java)
 for the full runnable flow — proved end to end against a real Sandbox (real broadcast confirmed).
 
 ## Installation
 
-Not yet published on Maven Central (licensing decision pending — see
-[`SDK_CAPABILITY_SPEC.md` §16](../../SDK_CAPABILITY_SPEC.md#16-licenciamento-decisão-aberta--não-bloqueia-implementação-local)).
-To consume locally:
+Not yet published on Maven Central (licensing decision pending), but the source is public.
+Clone and install into your local Maven repository:
 
 ```bash
-cd sdks/java
+git clone https://github.com/taylorjeftedasilva/ishtaran-java.git
+cd ishtaran-java
 mvn install
 ```
 
@@ -122,8 +125,8 @@ See [`GETTING_STARTED.md`](GETTING_STARTED.md) and [`examples/`](examples/) for 
 
 ## Grounding
 
-Every behavior of this SDK is extracted from the real API (`website/openapi/ishtaran-api.json`)
-and from the backend's source code (authentication, errors, webhooks, rate limiting) — never
-invented. See [`SDK_CAPABILITY_SPEC.md`](../../SDK_CAPABILITY_SPEC.md) for the complete contract,
-including every real API gap explicitly documented (no request ID, asymmetric enum format per
-module, money as `number` in JSON, etc.).
+Every behavior of this SDK is extracted from the real API and from the backend's source code
+(authentication, errors, webhooks, rate limiting) — never invented. See the
+[Documentation](https://ishtaran.com/docs/intro) and
+[API Reference](https://ishtaran.com/docs/api/ishtaran-api) / [raw OpenAPI](https://ishtaran.com/openapi.json)
+for the complete real contract.
