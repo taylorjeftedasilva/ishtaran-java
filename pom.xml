@@ -13,22 +13,18 @@
     <description>Official Java SDK for the Ishtaran programmable financial platform API.</description>
     <url>https://ishtaran.com</url>
 
-    <!--
-        License: project decision not yet made (see SDK_CAPABILITY_SPEC.md §16 and
-        docs/product-definition/16-DECISION-LOG.md — no software license entry exists
-        today). Explicit placeholder, never silently assumed as open-source.
-        Blocks external publication (Maven Central), does not block internal build/use.
-    -->
     <licenses>
         <license>
-            <name>UNLICENSED — pending project decision, see SDK_CAPABILITY_SPEC.md §16</name>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
         </license>
     </licenses>
 
     <scm>
-        <url>https://github.com/ishtaran/ishtaran-java</url>
-        <connection>scm:git:https://github.com/ishtaran/ishtaran-java.git</connection>
-        <developerConnection>scm:git:https://github.com/ishtaran/ishtaran-java.git</developerConnection>
+        <url>https://github.com/taylorjeftedasilva/ishtaran-java</url>
+        <connection>scm:git:https://github.com/taylorjeftedasilva/ishtaran-java.git</connection>
+        <developerConnection>scm:git:https://github.com/taylorjeftedasilva/ishtaran-java.git</developerConnection>
     </scm>
 
     <properties>
