@@ -1,9 +1,9 @@
 package com.ishtaran.sdk.error;
 
 /**
- * 400, {@code code=VALIDATION_ERROR}. {@code message()}/{@code details()} carregam UMA string com
- * todos os erros unidos por "; " — a API real (FluentValidation) não expõe array por campo (ver
- * SDK_CAPABILITY_SPEC.md §6.1/§12.2). Este SDK nunca finge uma estrutura por campo que não existe.
+ * 400, {@code code=VALIDATION_ERROR}. {@code message()}/{@code details()} carry ONE string with
+ * all errors joined by "; " — the real API (FluentValidation) does not expose a per-field array (see
+ * SDK_CAPABILITY_SPEC.md §6.1/§12.2). This SDK never fakes a per-field structure that does not exist.
  */
 public final class ValidationError extends IshtaranError {
     public ValidationError(String message, String requestId, Object details) {

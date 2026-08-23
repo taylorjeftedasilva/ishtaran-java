@@ -9,8 +9,8 @@ class RedactorTest {
 
     @Test
     void mask_longSecret_showsOnlyFirstAndLast4Chars() {
-        // API Key real (ApiKeyGenerator.Generate()) é Base64 de 32 bytes, sem prefixo tipo sk_live_
-        // (ver SDK_CAPABILITY_SPEC.md §12.5) — o mascaramento nunca assume um prefixo inexistente.
+        // Real API Key (ApiKeyGenerator.Generate()) is Base64 of 32 bytes, with no sk_live_-style prefix
+        // (see SDK_CAPABILITY_SPEC.md §12.5) — masking never assumes a nonexistent prefix.
         String masked = Redactor.mask("QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVoxMjM0NTY3ODkw");
         assertEquals("QUJD****ODkw", masked);
     }

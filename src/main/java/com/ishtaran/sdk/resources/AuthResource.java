@@ -10,9 +10,9 @@ import com.ishtaran.sdk.serialization.JsonCodec;
 import java.util.Map;
 
 /**
- * Control Plane — {@code /v1/auth/*} (5 rotas reais). {@link #login} preenche automaticamente o
- * {@link BearerTokenHolder} do client, usado por {@code AuthenticatingTransport} em toda chamada
- * subsequente de Control Plane — o consumidor nunca precisa repassar o token manualmente.
+ * Control Plane — {@code /v1/auth/*} (5 real routes). {@link #login} automatically fills the client's
+ * {@link BearerTokenHolder}, used by {@code AuthenticatingTransport} on every subsequent Control
+ * Plane call — the consumer never needs to pass the token along manually.
  */
 public final class AuthResource extends ApiResourceSupport {
 
@@ -60,7 +60,7 @@ public final class AuthResource extends ApiResourceSupport {
         executeNoContent(HttpRequest.post("/v1/auth/password-reset/confirm", body, false));
     }
 
-    /** Sem chamada HTTP de estado — permite testar/limpar sessão local do client. */
+    /** No stateful HTTP call — allows testing/clearing the client's local session. */
     public void logout() {
         bearerTokenHolder.clear();
     }
@@ -69,7 +69,7 @@ public final class AuthResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

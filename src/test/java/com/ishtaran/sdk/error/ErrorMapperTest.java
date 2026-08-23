@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Ver SDK_CAPABILITY_SPEC.md §6 — cada status/code real mapeia para o subtipo certo. */
+/** See SDK_CAPABILITY_SPEC.md §6 — each real status/code maps to the correct subtype. */
 class ErrorMapperTest {
 
     @Test

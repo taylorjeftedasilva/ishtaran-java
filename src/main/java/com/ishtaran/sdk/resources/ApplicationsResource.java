@@ -9,7 +9,7 @@ import com.ishtaran.sdk.serialization.JsonCodec;
 import java.util.Map;
 import java.util.UUID;
 
-/** Control Plane — {@code Applications} (4 rotas reais, além de create em {@link OrganizationsResource}). */
+/** Control Plane — {@code Applications} (4 real routes, plus create in {@link OrganizationsResource}). */
 public final class ApplicationsResource extends ApiResourceSupport {
 
     public ApplicationsResource(HttpTransport transport) {
@@ -39,7 +39,7 @@ public final class ApplicationsResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

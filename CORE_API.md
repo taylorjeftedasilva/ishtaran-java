@@ -1,26 +1,26 @@
 # Core API
 
-Cobertura completa e literal da API real (83 rotas em escopo, 16 módulos — ver
-`SDK_FEATURE_MATRIX.md` para a lista rota-a-rota e `SDK_METHOD_MAP.md` para o nome exato de cada
-método). Nenhum endpoint inventado; nenhum endpoint admin-only/platform-only exposto (fora de
-escopo do SDK, ver `SDK_CAPABILITY_SPEC.md` §1).
+Complete, literal coverage of the real API (83 routes in scope, 16 modules — see
+`SDK_FEATURE_MATRIX.md` for the route-by-route list and `SDK_METHOD_MAP.md` for each method's
+exact name). No invented endpoint; no admin-only/platform-only endpoint exposed (out of scope for
+the SDK, see `SDK_CAPABILITY_SPEC.md` §1).
 
-## Control Plane (sempre Member JWT)
+## Control Plane (always Member JWT)
 
-| Resource | Método de acesso |
+| Resource | Access method |
 |---|---|
 | Organizations | `client.organizations()` |
 | Applications | `client.applications()` |
 | Environments | `client.environments()` |
 | ApiKeys | `client.apiKeys()` |
 | Members | `client.members()` |
-| AssetNetworkCatalog (leitura) | `client.assetNetworkCatalog()` |
+| AssetNetworkCatalog (read) | `client.assetNetworkCatalog()` |
 | WebhookEndpoints (config) | `client.webhookEndpoints()` |
 | WebhookDeliveries | `client.webhookDeliveries()` |
 
-## Data Plane (API Key ou Member JWT)
+## Data Plane (API Key or Member JWT)
 
-| Resource | Método de acesso |
+| Resource | Access method |
 |---|---|
 | Accounts | `client.accounts()` |
 | Transactions | `client.transactions()` |
@@ -30,9 +30,9 @@ escopo do SDK, ver `SDK_CAPABILITY_SPEC.md` §1).
 | Refunds | `client.refunds()` |
 | Withdrawals | `client.withdrawals()` |
 | Workflows/EventTypes/Events | `client.workflows()` / `client.eventTypes()` / `client.events()` |
-| Sandbox (só Environment Sandbox) | `client.sandbox()` |
+| Sandbox (Sandbox Environment only) | `client.sandbox()` |
 
-## Exemplo — fluxo completo sem Easy Mode
+## Example — full flow without Easy Mode
 
 ```java
 var account = client.accounts().create(organizationId, "customer-123");
@@ -44,15 +44,15 @@ var txn = client.transactions().create(organizationId, applicationId, null, asse
 var intent = client.deposits().createPaymentIntent(organizationId, txn.transactionId(),
         assetNetworkId, amount, null, null);
 var fullIntent = client.deposits().getPaymentIntent(intent.paymentIntentId());
-// fullIntent.depositAddress() -- endereço real para observar on-chain
+// fullIntent.depositAddress() -- real address to watch on-chain
 
 var settlement = client.settlements().executeSettlement(txn.transactionId(), null);
 ```
 
-## Objetos anônimos reais
+## Real anonymous objects
 
-Vários endpoints `POST` da API real devolvem um objeto mínimo (ex.: `{ accountId }`,
-`{ transactionId }`) em vez do recurso completo — confirmado linha a linha no código-fonte dos
-handlers reais, nunca assumido. O SDK modela isso fielmente (`CreateAccountResult`,
-`CreateTransactionResult`, etc.) em vez de fingir que a resposta completa é devolvida. Busque o
-recurso completo com o `get(...)` correspondente quando precisar de todos os campos.
+Several `POST` endpoints of the real API return a minimal object (e.g. `{ accountId }`,
+`{ transactionId }`) instead of the full resource — confirmed line by line in the real handlers'
+source code, never assumed. The SDK models this faithfully (`CreateAccountResult`,
+`CreateTransactionResult`, etc.) instead of pretending the full response is returned. Fetch the
+full resource with the corresponding `get(...)` when you need every field.

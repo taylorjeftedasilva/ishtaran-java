@@ -4,10 +4,10 @@ import com.ishtaran.sdk.http.HttpResponse;
 import com.ishtaran.sdk.serialization.JsonCodec;
 
 /**
- * Traduz uma {@link HttpResponse} de erro real para o subtipo {@link IshtaranError} correto — ver
- * SDK_CAPABILITY_SPEC.md §6. 401/403 nunca têm corpo (§6.3); os demais 4xx/5xx normalmente carregam
- * {@link ProblemDetails}, mas o mapper nunca lança se o corpo vier vazio/malformado — cai em
- * {@link ApiError} genérico em vez de propagar um erro de parsing para o consumidor.
+ * Translates a real error {@link HttpResponse} into the correct {@link IshtaranError} subtype — see
+ * SDK_CAPABILITY_SPEC.md §6. 401/403 never have a body (§6.3); the other 4xx/5xx normally carry
+ * {@link ProblemDetails}, but the mapper never throws if the body comes back empty/malformed — it falls
+ * back to a generic {@link ApiError} instead of propagating a parsing error to the consumer.
  */
 public final class ErrorMapper {
 
@@ -19,15 +19,15 @@ public final class ErrorMapper {
         String requestId = firstNonNull(response.header("X-Request-Id"), response.header("X-Correlation-Id"));
 
         if (status == 401) {
-            return new AuthenticationError("Falha de autenticação (401) — API Key ou token ausente/inválido.");
+            return new AuthenticationError("Authentication failure (401) — missing or invalid API Key or token.");
         }
         if (status == 403) {
-            return new AuthorizationError("Não autorizado (403) — credencial válida, mas sem permissão para esta operação.");
+            return new AuthorizationError("Not authorized (403) — valid credential, but no permission for this operation.");
         }
 
         ProblemDetails problem = tryParse(response.body());
         String code = problem != null ? problem.code() : null;
-        String detail = problem != null && problem.detail() != null ? problem.detail() : "Erro HTTP " + status;
+        String detail = problem != null && problem.detail() != null ? problem.detail() : "HTTP error " + status;
 
         if (status == 429) {
             Integer retryAfter = parseIntOrNull(response.header("Retry-After"));

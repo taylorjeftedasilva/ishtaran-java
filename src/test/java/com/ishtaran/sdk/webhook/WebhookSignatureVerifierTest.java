@@ -71,10 +71,10 @@ class WebhookSignatureVerifierTest {
 
     @Test
     void compute_matchesKnownVector_forRealAlgorithm() {
-        // signedContent = "{timestamp}.{rawBodyJson}"; HMAC-SHA256(secret, signedContent), hex minúsculo.
-        // Vetor calculado independentemente via Python (hmac.new(...).hexdigest()), não pelo
-        // próprio verificador, para pegar um bug de implementação que um teste de round-trip
-        // (compute -> verify) sozinho não pegaria.
+        // signedContent = "{timestamp}.{rawBodyJson}"; HMAC-SHA256(secret, signedContent), lowercase hex.
+        // Vector computed independently via Python (hmac.new(...).hexdigest()), not by the
+        // verifier itself, to catch an implementation bug that a round-trip test
+        // (compute -> verify) alone would not catch.
         String result = WebhookSignatureVerifier.compute(1700000000L, "{\"a\":1}", "topsecret");
         assertEquals("6a939b0c71853d606167625a15168ee9188c6a511c773ef4f42d307f3849e50f", result);
     }

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Inteiro bruto no JSON — {@code Sandbox.Contracts.Enums.SimulatedBroadcastOutcome} (enum: [1,2]). */
+/** Raw integer in the JSON — {@code Sandbox.Contracts.Enums.SimulatedBroadcastOutcome} (enum: [1,2]). */
 public final class SimulatedBroadcastOutcome {
 
     public static final SimulatedBroadcastOutcome ACCEPTED = new SimulatedBroadcastOutcome("ACCEPTED", 1);

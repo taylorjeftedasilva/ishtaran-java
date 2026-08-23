@@ -1,26 +1,25 @@
 # Features
 
-Derivado de [`SDK_FEATURE_MATRIX.md`](../../SDK_FEATURE_MATRIX.md) (fonte de verdade compartilhada
-entre as 4 linguagens). Este arquivo é o resumo específico do Java — para o detalhe rota-a-rota,
-veja o documento raiz.
+Derived from [`SDK_FEATURE_MATRIX.md`](../../SDK_FEATURE_MATRIX.md) (source of truth shared
+across the 4 languages). This file is the Java-specific summary — for the route-by-route detail,
+see the root document.
 
-## Estado (2026-08-17)
+## Status (2026-08-17)
 
-114 de 119 capacidades rastreadas `DONE` para Java. As 5 restantes:
+114 of 119 tracked capabilities `DONE` for Java. The 5 remaining:
 
-| Capacidade | Estado |
+| Capability | Status |
 |---|---|
-| `examples/` (11 exemplos numerados) | Em progresso nesta sessão |
-| Documentação completa | Concluída nesta sessão (este arquivo faz parte dela) |
-| `SECURITY_REVIEW.md` | Em progresso nesta sessão |
+| `examples/` (11 numbered examples) | In progress this session |
+| Complete documentation | Completed this session (this file is part of it) |
+| `SECURITY_REVIEW.md` | In progress this session |
 
-Core API: **93/93 operações reais implementadas** (16 de 16 módulos em escopo). Easy Mode: 100%
+Core API: **93/93 real operations implemented** (16 of 16 modules in scope). Easy Mode: 100%
 (`payments.*`, `withdraw`, `getBalance`, `verifyWebhookSignature`). Cross-cutting: 100% (config,
-auth, erros, retry, idempotência, paginação, enums forward-compatible, segurança/redação, logging
-opt-in, waitFor seguro, empacotamento validado).
+auth, errors, retry, idempotency, pagination, forward-compatible enums, security/redaction,
+opt-in logging, safe waitFor, validated packaging).
 
-## Parity com outras linguagens
+## Parity with other languages
 
-TypeScript/Python/Go ainda não começaram — `SDK_FEATURE_MATRIX.md` marca `BLOCKED` para as 3, per a
-regra não-negociável do brief do SDK Program (nenhuma linguagem começa antes de Java fechar com
-`PASS`).
+TypeScript/Python/Go haven't started yet — `SDK_FEATURE_MATRIX.md` marks `BLOCKED` for the 3, per
+the SDK Program brief's non-negotiable rule (no language starts before Java closes with `PASS`).

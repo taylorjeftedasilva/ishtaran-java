@@ -6,8 +6,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
- * Resultado do Easy Mode {@code withdraw()} — nunca esconde a Network Fee (regra explícita do
- * brief). Expõe {@code withdrawalId} real do Core para debugging, mesmo em modo fácil.
+ * Result of Easy Mode {@code withdraw()} — never hides the Network Fee (explicit rule from the
+ * brief). Exposes the real Core {@code withdrawalId} for debugging, even in easy mode.
  */
 public record EasyWithdrawResult(
         UUID withdrawalId,

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/** Data Plane — {@code Settlement} (5 rotas reais; Refunds em {@link RefundsResource}). */
+/** Data Plane — {@code Settlement} (5 real routes; Refunds in {@link RefundsResource}). */
 public final class SettlementsResource extends ApiResourceSupport {
 
     public SettlementsResource(HttpTransport transport) {
@@ -51,7 +51,7 @@ public final class SettlementsResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

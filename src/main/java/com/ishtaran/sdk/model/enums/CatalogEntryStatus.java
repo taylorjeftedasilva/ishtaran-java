@@ -8,9 +8,9 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Grupo A — string legível no JSON (o módulo chama .ToString() na camada de Mapping) (ver SDK_CAPABILITY_SPEC.md §11.3). Classe (não {@code enum} Java) para permitir
- * que um valor desconhecido preserve o String bruto exato recebido em vez de colapsar em uma
- * constante fixa sem informação (§11.4 — forward-compatibility real).
+ * Group A — human-readable string in the JSON (the module calls .ToString() in the Mapping layer) (see SDK_CAPABILITY_SPEC.md §11.3). A class (not a Java {@code enum}) so
+ * an unknown value can preserve the exact raw String received instead of collapsing into an
+ * uninformative fixed constant (§11.4 — real forward-compatibility).
  */
 public final class CatalogEntryStatus {
 

@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-/** 04 — Criar uma Transaction via Core API, com controle granular dos participantes. */
+/** 04 — Create a Transaction via Core API, with granular control over the participants. */
 public final class Example04CreateTransactionCore {
 
     public static void main(String[] args) {

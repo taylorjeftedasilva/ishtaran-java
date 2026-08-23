@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!--
-        Projeto de amostra FORA do reactor do SDK — existe só para provar que o artefato Maven
-        real (ishtaran-java, instalado no .m2 local via `mvn install`) é consumível por um projeto
-        Maven comum, como exige o "package dry run" do brief do SDK Program (nunca publicação real,
-        só instalação local + consumo).
+        Sample project OUTSIDE the SDK reactor — exists only to prove that the real Maven
+        artifact (ishtaran-java, installed to the local .m2 via `mvn install`) is consumable by an
+        ordinary Maven project, as required by the "package dry run" in the SDK Program brief
+        (never a real publish, only local install + consumption).
     -->
     <groupId>com.ishtaran.samples</groupId>
     <artifactId>maven-consumer</artifactId>

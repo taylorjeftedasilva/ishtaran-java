@@ -1,35 +1,36 @@
 # Security
 
-Ver `SECURITY_REVIEW.md` para o checklist formal completo. Resumo do comportamento real:
+See `SECURITY_REVIEW.md` for the complete formal checklist. Summary of the real behavior:
 
-## Segredos nunca vazam
+## Secrets never leak
 
-- `apiKey`, `endpointSecret` de webhook, tokens JWT: nunca aparecem em log, exceção, `toString()`
-  de qualquer classe do SDK, ou serialização.
-- `IshtaranClientConfig.toString()` mascara a API Key (`Redactor.mask` — 4 primeiros + `****` + 4
-  últimos caracteres; nunca assume um prefixo tipo `sk_live_` que não existe de verdade na API real).
-- Logging opt-in (`enableLogging(true)`) nunca loga `Authorization`/`X-Api-Key` em texto puro, nem o
-  corpo bruto da requisição/resposta (que pode conter um secret recém-gerado).
+- `apiKey`, webhook `endpointSecret`, JWT tokens: never appear in logs, exceptions, any SDK
+  class's `toString()`, or serialization.
+- `IshtaranClientConfig.toString()` masks the API Key (`Redactor.mask` — first 4 + `****` + last
+  4 characters; never assumes a `sk_live_`-style prefix that doesn't really exist in the real
+  API).
+- Opt-in logging (`enableLogging(true)`) never logs `Authorization`/`X-Api-Key` in plain text, nor
+  the raw request/response body (which may contain a freshly generated secret).
 
 ## TLS
 
-Verificação de certificado ligada por padrão, sem switch fácil de desligar em produção — a única
-exceção (`allowInsecureTlsForLocalDevelopment`) exige `Environment.LOCAL` explicitamente e lança
-exceção se combinada com `SANDBOX`/`PRODUCTION`.
+Certificate verification is on by default, with no easy switch to disable it in production — the
+only exception (`allowInsecureTlsForLocalDevelopment`) explicitly requires `Environment.LOCAL` and
+throws if combined with `SANDBOX`/`PRODUCTION`.
 
 ## Webhook
 
-`WebhookSignatureVerifier` usa `MessageDigest.isEqual` (tempo constante real da JDK), valida
-timestamp contra replay, nunca loga o secret usado no cálculo.
+`WebhookSignatureVerifier` uses `MessageDigest.isEqual` (the JDK's real constant-time comparison),
+validates the timestamp against replay, and never logs the secret used in the calculation.
 
-## Dependências
+## Dependencies
 
-Mínimas e maduras: `java.net.http.HttpClient` (JDK, zero dependência externa de transporte),
-Jackson (`jackson-databind`+`jackson-datatype-jsr310`), SLF4J (fachada, sem implementação
-obrigatória). Nenhuma outra dependência de terceiros.
+Minimal and mature: `java.net.http.HttpClient` (JDK, zero external transport dependency),
+Jackson (`jackson-databind`+`jackson-datatype-jsr310`), SLF4J (facade, no implementation
+required). No other third-party dependency.
 
-## Reportando uma vulnerabilidade
+## Reporting a vulnerability
 
-Este SDK ainda não tem um canal de disclosure formal publicado — trate como parte do processo de
-segurança do repositório principal (`docs/specs/security-adversarial-review/`) até um canal
-dedicado existir.
+This SDK doesn't yet have a published formal disclosure channel — treat it as part of the main
+repository's security process (`docs/specs/security-adversarial-review/`) until a dedicated
+channel exists.

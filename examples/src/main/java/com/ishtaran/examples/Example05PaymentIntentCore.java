@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
- * 05 — Criar um Payment Intent via Core API. O depositAddress real só aparece no GET dedicado
- * (nunca na resposta do POST de criação — comportamento real da API, não limitação do SDK).
+ * 05 — Create a Payment Intent via Core API. The real depositAddress only appears in the
+ * dedicated GET (never in the creation POST response — real API behavior, not an SDK limitation).
  */
 public final class Example05PaymentIntentCore {
 

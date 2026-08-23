@@ -1,44 +1,44 @@
 # Idempotency
 
-Dois mecanismos reais e diferentes — nunca um padrão único assumido (ver `SDK_CAPABILITY_SPEC.md`
+Two real, different mechanisms — never a single pattern assumed (see `SDK_CAPABILITY_SPEC.md`
 §9).
 
-## Campo de corpo (`idempotencyKey`) — todo endpoint financeiro
+## Body field (`idempotencyKey`) — every financial endpoint
 
 `transactions().create(...)`, `deposits().createPaymentIntent(...)`,
 `settlements().executeSettlement(...)`, `refunds().executeRefund(...)`,
 `withdrawals().request(...)`, `events().ingest(...)`:
 
 ```java
-// Omitido -- o SDK gera um UUID v4 automaticamente.
+// Omitted -- the SDK auto-generates a UUID v4.
 var txn = client.transactions().create(orgId, appId, null, assetNetworkId, amount, participants, null);
 
-// Explícito -- nunca sobrescrito pelo SDK.
+// Explicit -- never overwritten by the SDK.
 var txn2 = client.transactions().create(orgId, appId, null, assetNetworkId, amount, participants, "my-key-123");
 ```
 
-## Header `Idempotency-Key` — só 2 endpoints reais
+## `Idempotency-Key` header — only 2 real endpoints
 
-`organizations().create(...)` e `organizations().createApplication(...)` — confirmado em
-código-fonte, os únicos 2 lugares do backend inteiro que usam `[FromHeader(Name =
-"Idempotency-Key")]` em vez de campo de corpo. Mesma política de auto-geração/override explícito,
-só que via header:
+`organizations().create(...)` and `organizations().createApplication(...)` — confirmed in source
+code, the only 2 places in the entire backend that use `[FromHeader(Name =
+"Idempotency-Key")]` instead of a body field. Same auto-generation/explicit-override policy,
+just via header:
 
 ```java
-var org = client.organizations().create("Acme Inc", null); // header gerado automaticamente
+var org = client.organizations().create("Acme Inc", null); // header auto-generated
 ```
 
-Nenhum outro endpoint de `OrganizationTenancy` (Environments, ApiKeys) tem qualquer proteção de
-idempotência — gap real da API, não algo que o SDK deveria fingir corrigir.
+No other `OrganizationTenancy` endpoint (Environments, ApiKeys) has any idempotency protection —
+a real API gap, not something the SDK should pretend to fix.
 
-## Reenvio com a mesma chave
+## Resending with the same key
 
-Reenviar a mesma chave com o mesmo payload é seguro (a API trata como replay). Reenviar a mesma
-chave com um payload diferente resulta em `IdempotencyConflictError` (409,
-`IDEMPOTENCY_KEY_CONFLICT`) — o SDK propaga esse erro tipado, nunca o esconde.
+Resending the same key with the same payload is safe (the API treats it as a replay). Resending
+the same key with a different payload results in `IdempotencyConflictError` (409,
+`IDEMPOTENCY_KEY_CONFLICT`) — the SDK propagates this typed error, never hiding it.
 
-## Retry automático nunca gera uma chave nova
+## Automatic retry never generates a new key
 
-Quando o `RetryingTransport` reintenta uma chamada com Idempotency-Key (ver `RETRIES.md`), ele
-reenvia exatamente a mesma requisição já montada — a mesma chave da primeira tentativa, nunca uma
-nova gerada por tentativa (isso quebraria a garantia de idempotência).
+When `RetryingTransport` retries a call with an Idempotency-Key (see `RETRIES.md`), it resends
+exactly the same already-built request — the same key from the first attempt, never a new one
+generated per attempt (that would break the idempotency guarantee).

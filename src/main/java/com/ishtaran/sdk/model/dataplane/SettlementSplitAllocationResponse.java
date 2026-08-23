@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-/** {@code retentionReason} só é não-nulo quando {@code status == RETAINED}. */
+/** {@code retentionReason} is only non-null when {@code status == RETAINED}. */
 public record SettlementSplitAllocationResponse(
         UUID splitAllocationId,
         UUID participantId,

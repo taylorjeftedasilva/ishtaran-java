@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-/** Espelha {@code Ledger.Contracts.Responses.LedgerEntryResponse} exatamente (ver nota em {@link BalanceResponse}). */
+/** Mirrors {@code Ledger.Contracts.Responses.LedgerEntryResponse} exactly (see note in {@link BalanceResponse}). */
 public record LedgerEntryResponse(
         UUID entryId,
         UUID ledgerAccountId,

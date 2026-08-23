@@ -1,52 +1,52 @@
 # SECURITY_REVIEW.md — Ishtaran Java SDK
 
-Checklist do §57 do brief do SDK Program. Cada item marcado com evidência real (teste ou leitura de
-código), nunca assumido. **PASS** com 2 limitações conhecidas documentadas explicitamente (nunca
-escondidas) — ver seção final.
+Checklist from §57 of the SDK Program brief. Every item marked with real evidence (test or code
+reading), never assumed. **PASS** with 2 known limitations explicitly documented (never hidden) —
+see the final section.
 
-| # | Item | Status | Evidência |
+| # | Item | Status | Evidence |
 |---|---|---|---|
-| 1 | Secrets nunca logados | ✅ PASS | `LoggingTransportTest.redactedHeaders_neverExposesApiKeyOrAuthorizationInPlainText`; `RedactorTest` |
-| 2 | API Key nunca na URL/querystring | ✅ PASS | `AuthenticatingTransport` só anexa via header (`X-Api-Key`/`Authorization`); nenhum resource constrói URL com a chave — confirmado por leitura de todo `resources/*.java` |
-| 3 | Verificação de TLS ligada por padrão | ✅ PASS | `JdkHttpTransport` nunca desliga verificação; `allowInsecureTlsForLocalDevelopment` só existe combinado com `Environment.LOCAL`, lança em `build()` caso contrário — `IshtaranClientConfigTest.insecureTlsOverride_onlyAllowedForLocal` |
-| 4 | Comparação de assinatura de webhook em tempo constante | ✅ PASS | `MessageDigest.isEqual` real (não `String.equals`) — `WebhookSignatureVerifierTest` (7 testes, incluindo payload/assinatura adulterados e vetor calculado independentemente em Python) |
-| 5 | Retries seguros (nunca cegos em mutação não-idempotente) | ✅ PASS | `RetryingTransportTest.status503_nonIdempotentRequest_neverRetried`; nunca retry em 400/401/403/404/409/422 |
-| 6 | Timeout obrigatório, nunca infinito por padrão | ✅ PASS | `IshtaranClientConfigTest.defaults_areSaneAndFinite_neverInfiniteTimeout` — connect 5s/request 30s |
-| 7 | Redação central em logging opt-in | ✅ PASS | `LoggingTransport` nunca loga corpo bruto, só método/path/status/duração; headers sensíveis mascarados |
-| 8 | Dependências mínimas, escaneadas | ⚠️ PARCIAL | 3 dependências de produção (`jackson-databind`, `jackson-datatype-jsr310`, `slf4j-api`), todas maduras/amplamente usadas. Scan automatizado de CVE (`dependency-check-maven`) **não executado nesta sessão** — preparado em `JAVA_SDK_IMPLEMENTATION_PLAN.md` §13, fica para o pipeline de CI real |
-| 9 | Dinheiro nunca perde precisão | ✅ PASS | `MoneyPrecisionTest` — `BigDecimal` lido direto do token JSON, nunca via `double` intermediário |
-| 10 | Resposta maliciosa/malformada nunca derruba o client | ✅ PASS | `ErrorMapperTest.malformedOrEmptyBody_neverThrowsParsingException_fallsBackToApiError`; enums desconhecidos nunca lançam (`EnumForwardCompatibilityTest`) |
-| 11 | Corpo de resposta com tamanho ilimitado | ⚠️ **LIMITAÇÃO REAL, NÃO CORRIGIDA** | `JdkHttpTransport` usa `BodyHandlers.ofString()`, que buferiza a resposta inteira em memória sem limite de tamanho. Um servidor comprometido/MITM que devolva um corpo arbitrariamente grande pode causar exaustão de memória. Ver "Limitações conhecidas" abaixo |
-| 12 | Desserialização segura (sem gadget/polymorphic deserialization) | ✅ PASS | `JsonCodec` nunca habilita `enableDefaultTyping`/polymorphic type resolution do Jackson — só desserializa para tipos concretos conhecidos (records), nunca para `Object`/tipo aberto a partir de um campo do payload |
-| 13 | URL controlada pelo usuário / risco de SSRF | ✅ PASS | `baseUrl` é sempre explícito e fixado na construção do client — nenhum método de negócio individual aceita override de URL (verificado: nenhum método em `resources/*.java` recebe parâmetro de URL/endpoint) |
-| 14 | Comportamento de redirecionamento HTTP | ✅ PASS (default seguro da JDK) | `HttpClient.newBuilder()` sem `.followRedirects(...)` explícito usa o default `Redirect.NEVER` da JDK — o SDK nunca segue redirect automaticamente, evitando um redirect malicioso desviar a chamada para outro host |
-| 15 | Injeção de header | ✅ PASS | Nomes/valores de header passam pela validação nativa de `java.net.http.HttpRequest.Builder.header()` (RFC 7230), que rejeita CR/LF e caracteres inválidos — nunca construído por concatenação de string crua |
-| 16 | Comportamento de proxy | N/A | Não aplicável — nenhuma configuração de proxy customizada é exposta nesta versão; `HttpClient` usa o proxy do sistema, comportamento padrão da JDK |
+| 1 | Secrets never logged | ✅ PASS | `LoggingTransportTest.redactedHeaders_neverExposesApiKeyOrAuthorizationInPlainText`; `RedactorTest` |
+| 2 | API Key never in the URL/querystring | ✅ PASS | `AuthenticatingTransport` only attaches it via header (`X-Api-Key`/`Authorization`); no resource builds a URL with the key — confirmed by reading all of `resources/*.java` |
+| 3 | TLS verification on by default | ✅ PASS | `JdkHttpTransport` never disables verification; `allowInsecureTlsForLocalDevelopment` only exists combined with `Environment.LOCAL`, throws in `build()` otherwise — `IshtaranClientConfigTest.insecureTlsOverride_onlyAllowedForLocal` |
+| 4 | Constant-time webhook signature comparison | ✅ PASS | Real `MessageDigest.isEqual` (not `String.equals`) — `WebhookSignatureVerifierTest` (7 tests, including tampered payload/signature and an independently computed vector in Python) |
+| 5 | Safe retries (never blind on non-idempotent mutation) | ✅ PASS | `RetryingTransportTest.status503_nonIdempotentRequest_neverRetried`; never retries on 400/401/403/404/409/422 |
+| 6 | Mandatory timeout, never infinite by default | ✅ PASS | `IshtaranClientConfigTest.defaults_areSaneAndFinite_neverInfiniteTimeout` — connect 5s/request 30s |
+| 7 | Central redaction in opt-in logging | ✅ PASS | `LoggingTransport` never logs the raw body, only method/path/status/duration; sensitive headers masked |
+| 8 | Minimal, scanned dependencies | ⚠️ PARTIAL | 3 production dependencies (`jackson-databind`, `jackson-datatype-jsr310`, `slf4j-api`), all mature/widely used. Automated CVE scan (`dependency-check-maven`) **not run this session** — prepared in `JAVA_SDK_IMPLEMENTATION_PLAN.md` §13, left for the real CI pipeline |
+| 9 | Money never loses precision | ✅ PASS | `MoneyPrecisionTest` — `BigDecimal` read directly from the JSON token, never through an intermediate `double` |
+| 10 | Malicious/malformed response never crashes the client | ✅ PASS | `ErrorMapperTest.malformedOrEmptyBody_neverThrowsParsingException_fallsBackToApiError`; unknown enums never throw (`EnumForwardCompatibilityTest`) |
+| 11 | Unbounded response body size | ⚠️ **REAL LIMITATION, NOT FIXED** | `JdkHttpTransport` uses `BodyHandlers.ofString()`, which buffers the entire response in memory with no size limit. A compromised/MITM server returning an arbitrarily large body could cause memory exhaustion. See "Known limitations" below |
+| 12 | Safe deserialization (no gadget/polymorphic deserialization) | ✅ PASS | `JsonCodec` never enables Jackson's `enableDefaultTyping`/polymorphic type resolution — only deserializes into known concrete types (records), never into `Object`/an open type driven by a payload field |
+| 13 | User-controlled URL / SSRF risk | ✅ PASS | `baseUrl` is always explicit and fixed at client construction — no individual business method accepts a URL override (verified: no method in `resources/*.java` takes a URL/endpoint parameter) |
+| 14 | HTTP redirect behavior | ✅ PASS (safe JDK default) | `HttpClient.newBuilder()` without an explicit `.followRedirects(...)` uses the JDK's `Redirect.NEVER` default — the SDK never follows a redirect automatically, preventing a malicious redirect from diverting the call to another host |
+| 15 | Header injection | ✅ PASS | Header names/values go through `java.net.http.HttpRequest.Builder.header()`'s native validation (RFC 7230), which rejects CR/LF and invalid characters — never built by raw string concatenation |
+| 16 | Proxy behavior | N/A | Not applicable — no custom proxy configuration is exposed in this version; `HttpClient` uses the system proxy, the JDK's default behavior |
 
-## Achado corrigido durante esta revisão
+## Finding fixed during this review
 
-**Injeção de query string em `webhookEndpoints().listDeliveries(eventType, ...)`** — o valor de
-`eventType` (string livre fornecida pelo consumidor) era concatenado diretamente na query string
-sem URL-encoding, permitindo que um valor malicioso (ex. `"x&status=DELIVERED"`) injetasse um
-segundo parâmetro de query não intencional. Corrigido com `URLEncoder.encode(...)`, coberto por
+**Query string injection in `webhookEndpoints().listDeliveries(eventType, ...)`** — the
+`eventType` value (a free-form string supplied by the consumer) was concatenated directly into
+the query string without URL-encoding, letting a malicious value (e.g. `"x&status=DELIVERED"`)
+inject an unintended second query parameter. Fixed with `URLEncoder.encode(...)`, covered by
 `WebhookEndpointsResourceTest.listDeliveries_eventTypeFilter_isUrlEncoded_neverInjectsExtraQueryParams`.
-Todo outro valor interpolado em query string do SDK é ou um `UUID`/enum de conjunto fechado (sem
-risco de injeção) ou já formatado por `OffsetDateTime.toString()` (ISO-8601, charset seguro).
+Every other value interpolated into an SDK query string is either a `UUID`/closed-set enum (no
+injection risk) or already formatted by `OffsetDateTime.toString()` (ISO-8601, safe charset).
 
-## Limitações conhecidas (documentadas, não escondidas)
+## Known limitations (documented, not hidden)
 
-1. **Corpo de resposta sem limite de tamanho** (item 11) — aceito nesta versão porque a API real
-   (Ishtaran) não é uma origem não-confiável no fluxo normal de uso do SDK; o risco só existe se o
-   `baseUrl` apontar para um host comprometido. Mitigação futura: trocar `BodyHandlers.ofString()`
-   por um handler com limite configurável de tamanho.
-2. **Scan de dependências automatizado não executado** (item 8) — as 3 dependências de produção são
-   bibliotecas maduras e amplamente escaneadas na comunidade (Jackson, SLF4J), mas nenhuma
-   verificação de CVE foi rodada nesta sessão especificamente contra as versões fixadas no `pom.xml`.
+1. **Unbounded response body size** (item 11) — accepted in this version because the real API
+   (Ishtaran) is not an untrusted origin in the SDK's normal usage flow; the risk only exists if
+   `baseUrl` points to a compromised host. Future mitigation: replace `BodyHandlers.ofString()`
+   with a handler that has a configurable size limit.
+2. **Automated dependency scan not run** (item 8) — the 3 production dependencies are mature
+   libraries widely scanned by the community (Jackson, SLF4J), but no CVE check was run this
+   session specifically against the versions pinned in `pom.xml`.
 
-Nenhuma das duas limitações bloqueia o uso do SDK contra a API Ishtaran real hoje — ambas são
-registradas para tratamento antes de uma eventual publicação pública (Maven Central).
+Neither limitation blocks using the SDK against the real Ishtaran API today — both are logged for
+handling before any eventual public release (Maven Central).
 
-## Veredito
+## Verdict
 
-**PASS**, com as 2 limitações acima documentadas explicitamente (nunca escondidas) — nenhum achado
-crítico ou de alta severidade permanece sem correção ou sem justificativa registrada.
+**PASS**, with the 2 limitations above explicitly documented (never hidden) — no critical or
+high-severity finding remains unfixed or unjustified.

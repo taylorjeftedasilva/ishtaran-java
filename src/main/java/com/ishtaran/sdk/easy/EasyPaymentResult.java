@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
- * Combina o estado de Transaction + Payment Intent em um objeto único de leitura fácil — expõe os
- * IDs reais do Core ({@code transactionId}/{@code paymentIntentId}) para debugging, mesmo em modo
- * fácil (regra do brief).
+ * Combines Transaction + Payment Intent state into a single easy-to-read object — exposes the
+ * real Core IDs ({@code transactionId}/{@code paymentIntentId}) for debugging, even in easy
+ * mode (rule from the brief).
  */
 public record EasyPaymentResult(
         UUID transactionId,

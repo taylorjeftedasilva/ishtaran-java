@@ -8,9 +8,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * Base compartilhada de todo {@code waitFor} do SDK (Easy Mode {@code payments.waitFor} e Core
- * {@code withdrawals().waitFor}/{@code transactions().waitFor}) — nunca polling infinito, sempre
- * {@code timeout} explícito (ver SDK_CAPABILITY_SPEC.md §15).
+ * Shared base for every {@code waitFor} in the SDK (Easy Mode {@code payments.waitFor} and Core
+ * {@code withdrawals().waitFor}/{@code transactions().waitFor}) -- never infinite polling, always
+ * an explicit {@code timeout} (see SDK_CAPABILITY_SPEC.md section 15).
  */
 public final class Polling {
 
@@ -25,7 +25,7 @@ public final class Polling {
                 return result;
             }
             if (Instant.now().isAfter(deadline)) {
-                throw new TimeoutError("waitFor excedeu o timeout de " + timeout + " aguardando " + description, null);
+                throw new TimeoutError("waitFor exceeded the timeout of " + timeout + " waiting for " + description, null);
             }
             sleep(pollInterval);
         }
@@ -36,7 +36,7 @@ public final class Polling {
             Thread.sleep(duration.toMillis());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new TimeoutError("waitFor interrompido", e);
+            throw new TimeoutError("waitFor interrupted", e);
         }
     }
 }

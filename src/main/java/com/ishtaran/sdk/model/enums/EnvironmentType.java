@@ -8,11 +8,11 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Inteiro bruto no JSON — {@code OrganizationTenancy.Contracts.Enums.EnvironmentType} é
- * {@code enum: [1,2], type: integer} no OpenAPI real (confirmado diretamente, corrigindo uma
- * suposição incorreta anterior de que seria string). Usado hoje só como campo de REQUEST
- * (`CreateEnvironmentRequest.type`) — não existe {@code EnvironmentResponse} real na API (o módulo
- * `Environments` só tem 2 rotas, nenhuma devolve esse schema).
+ * Raw integer in the JSON — {@code OrganizationTenancy.Contracts.Enums.EnvironmentType} is
+ * {@code enum: [1,2], type: integer} in the real OpenAPI (confirmed directly, correcting an
+ * earlier incorrect assumption that it would be a string). Used today only as a REQUEST field
+ * (`CreateEnvironmentRequest.type`) — there is no real {@code EnvironmentResponse} in the API (the
+ * `Environments` module only has 2 routes, none of which returns this schema).
  */
 public final class EnvironmentType {
 

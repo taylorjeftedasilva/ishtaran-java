@@ -14,10 +14,10 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Control Plane — {@code Organizations} (6 rotas reais). Sempre Member JWT (nunca API Key — ver
- * SDK_CAPABILITY_SPEC.md §4). {@code create}/{@code createApplication} usam idempotência via
- * HEADER {@code Idempotency-Key} — diferente do padrão de campo de corpo dos módulos financeiros
- * (ver SDK_CAPABILITY_SPEC.md §9); nunca auto-gerada aqui (opcional de verdade no backend real).
+ * Control Plane — {@code Organizations} (6 real routes). Always Member JWT (never API Key — see
+ * SDK_CAPABILITY_SPEC.md §4). {@code create}/{@code createApplication} use idempotency via the
+ * {@code Idempotency-Key} HEADER — different from the body-field pattern of the financial modules
+ * (see SDK_CAPABILITY_SPEC.md §9); never auto-generated here (truly optional on the real backend).
  */
 public final class OrganizationsResource extends ApiResourceSupport {
 
@@ -25,7 +25,7 @@ public final class OrganizationsResource extends ApiResourceSupport {
         super(transport);
     }
 
-    /** Única rota real sem autenticação — ponto de entrada do sistema. */
+    /** The only real route without authentication — the system's entry point. */
     public CreatedResourceResponse create(String name, String idempotencyKey) {
         var body = toJson(Map.of("name", name));
         return execute(HttpRequest.post("/v1/organizations", body, false)
@@ -61,7 +61,7 @@ public final class OrganizationsResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

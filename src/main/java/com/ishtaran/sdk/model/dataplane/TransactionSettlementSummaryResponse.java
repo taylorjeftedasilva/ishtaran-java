@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
- * {@code remainingReservedAmount} = ainda reservado, não liquidado nem reembolsado;
- * {@code retainedAmount} = soma de {@code SplitAllocationStatus.RETAINED} entre todos os
- * Settlements da Transaction (DEC-019/DEC-022 — visibilidade real de valor pendente/retido).
+ * {@code remainingReservedAmount} = still reserved, neither settled nor refunded;
+ * {@code retainedAmount} = sum of {@code SplitAllocationStatus.RETAINED} across all
+ * Settlements of the Transaction (DEC-019/DEC-022 -- real visibility into pending/retained amounts).
  */
 public record TransactionSettlementSummaryResponse(
         UUID transactionId,

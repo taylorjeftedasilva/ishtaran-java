@@ -9,7 +9,7 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/** Ver SDK_CAPABILITY_SPEC.md §8 — retry só em conexão/429/5xx-idempotente; nunca em 4xx determinístico. */
+/** See SDK_CAPABILITY_SPEC.md §8 — retry only on connection/429/idempotent-5xx; never on deterministic 4xx. */
 class RetryingTransportTest {
 
     private static final RetryPolicy FAST_POLICY =

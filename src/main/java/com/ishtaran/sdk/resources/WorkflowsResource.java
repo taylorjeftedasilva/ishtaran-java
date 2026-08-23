@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/** Data Plane — {@code WorkflowRules} (7 rotas de Workflow/Version/Rule; Events/EventTypes em recursos próprios). */
+/** Data Plane -- {@code WorkflowRules} (7 Workflow/Version/Rule routes; Events/EventTypes in their own resources). */
 public final class WorkflowsResource extends ApiResourceSupport {
 
     public WorkflowsResource(HttpTransport transport) {
@@ -77,7 +77,7 @@ public final class WorkflowsResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

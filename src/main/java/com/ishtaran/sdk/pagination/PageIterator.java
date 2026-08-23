@@ -6,12 +6,12 @@ import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 
 /**
- * Iterador lazy sobre um endpoint com paginação real {@code skip}/{@code take} — busca a próxima
- * página sob demanda, nunca carrega a coleção inteira de uma vez (regra do brief: "nunca bulk-
- * loading unbounded"). Usado só nos 2 endpoints do SDK com paginação real de verdade
- * (Withdrawals.list, Ledger.listEntries — ver SDK_CAPABILITY_SPEC.md §12.7); todo outro endpoint de
- * listagem não tem paginação real no servidor, então devolve {@code List<T>} simples (que já é
- * {@code Iterable}, cobrindo o caso de uso sem fingir paginação que a API não tem).
+ * Lazy iterator over an endpoint with real {@code skip}/{@code take} pagination — fetches the next
+ * page on demand, never loads the whole collection at once (rule from the brief: "never unbounded
+ * bulk-loading"). Used only on the 2 SDK endpoints with genuinely real pagination
+ * (Withdrawals.list, Ledger.listEntries — see SDK_CAPABILITY_SPEC.md §12.7); every other listing
+ * endpoint has no real server-side pagination, so it returns a plain {@code List<T>} (which is
+ * already {@code Iterable}, covering the use case without faking pagination the API doesn't have).
  */
 public final class PageIterator<T> implements Iterable<T> {
 
@@ -20,7 +20,7 @@ public final class PageIterator<T> implements Iterable<T> {
 
     public PageIterator(int pageSize, BiFunction<Integer, Integer, List<T>> fetchPage) {
         if (pageSize <= 0) {
-            throw new IllegalArgumentException("pageSize deve ser positivo");
+            throw new IllegalArgumentException("pageSize must be positive");
         }
         this.pageSize = pageSize;
         this.fetchPage = fetchPage;

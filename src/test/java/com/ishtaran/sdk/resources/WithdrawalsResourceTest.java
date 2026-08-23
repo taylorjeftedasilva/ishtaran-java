@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Integração sem rede (FakeHttpTransport) — cobre serialização real de request/response do módulo mais crítico do brief. */
+/** Network-free integration (FakeHttpTransport) — covers real request/response serialization for the brief's most critical module. */
 class WithdrawalsResourceTest {
 
     @Test

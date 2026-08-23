@@ -1,8 +1,8 @@
 package com.ishtaran.sdk.http;
 
 /**
- * Abstração de transporte — a única implementação real é {@link JdkHttpTransport}, mas testes usam
- * uma implementação falsa in-memory, sem rede (requisito explícito do brief do SDK Program).
+ * Transport abstraction — the only real implementation is {@link JdkHttpTransport}, but tests use
+ * a fake in-memory implementation, with no network (explicit requirement from the SDK Program brief).
  */
 public interface HttpTransport {
     HttpResponse send(HttpRequest request);

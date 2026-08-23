@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/** Data Plane — {@code Events} (1 rota real: ingestão, mesmo módulo {@code WorkflowRules}). */
+/** Data Plane — {@code Events} (1 real route: ingestion, same {@code WorkflowRules} module). */
 public final class EventsResource extends ApiResourceSupport {
 
     public EventsResource(HttpTransport transport) {
@@ -37,7 +37,7 @@ public final class EventsResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

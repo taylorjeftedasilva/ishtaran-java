@@ -11,12 +11,12 @@ import java.time.Instant;
 import java.util.HexFormat;
 
 /**
- * Verificação real de assinatura de webhook — algoritmo extraído byte a byte de
- * {@code WebhookSignatureCalculator.cs}/{@code HttpWebhookDeliveryPort.cs} (ver
- * SDK_CAPABILITY_SPEC.md §10): {@code signedContent = "{unixTimestamp}.{rawBodyJson}"},
- * {@code signature = lowercase_hex(HMAC_SHA256(secret, signedContent))}. Usa o {@code rawBody}
- * exatamente como recebido — nunca reserializa o JSON antes de calcular (reserialização pode mudar
- * espaçamento/ordem e quebrar a comparação).
+ * Real webhook signature verification -- algorithm extracted byte-for-byte from
+ * {@code WebhookSignatureCalculator.cs}/{@code HttpWebhookDeliveryPort.cs} (see
+ * SDK_CAPABILITY_SPEC.md section 10): {@code signedContent = "{unixTimestamp}.{rawBodyJson}"},
+ * {@code signature = lowercase_hex(HMAC_SHA256(secret, signedContent))}. Uses {@code rawBody}
+ * exactly as received -- never re-serializes the JSON before computing (re-serialization could
+ * change spacing/order and break the comparison).
  */
 public final class WebhookSignatureVerifier {
 
@@ -53,7 +53,7 @@ public final class WebhookSignatureVerifier {
         return constantTimeEquals(expectedSignature, signatureHeader.trim().toLowerCase(java.util.Locale.ROOT));
     }
 
-    /** Exposto para quem quer calcular sem também validar o timestamp (ex.: testes). */
+    /** Exposed for callers who want to compute without also validating the timestamp (e.g. tests). */
     public static String compute(long unixTimestampSeconds, String rawBody, String endpointSecret) {
         String signedContent = unixTimestampSeconds + "." + rawBody;
         try {
@@ -62,7 +62,7 @@ public final class WebhookSignatureVerifier {
             byte[] raw = mac.doFinal(signedContent.getBytes(StandardCharsets.UTF_8));
             return HexFormat.of().formatHex(raw);
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new IllegalStateException("HmacSHA256 indisponível na JVM", e);
+            throw new IllegalStateException("HmacSHA256 unavailable on the JVM", e);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.ishtaran.sdk.error;
 
-/** 429, {@code code=RATE_LIMITED}. Sempre retryable — expõe {@code retryAfterSeconds} do header real. */
+/** 429, {@code code=RATE_LIMITED}. Always retryable — exposes {@code retryAfterSeconds} from the real header. */
 public final class RateLimitError extends IshtaranError {
 
     private final Integer retryAfterSeconds;

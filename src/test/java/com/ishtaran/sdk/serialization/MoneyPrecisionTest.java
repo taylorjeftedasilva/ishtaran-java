@@ -8,9 +8,9 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * A API real envia dinheiro como {@code number(double)} no JSON (nunca string — ver
- * SDK_CAPABILITY_SPEC.md §11.1). Este teste confirma que o codec preserva a precisão exata do
- * token JSON, sem arredondamento via {@code double} intermediário.
+ * The real API sends money as a {@code number(double)} in JSON (never a string — see
+ * SDK_CAPABILITY_SPEC.md §11.1). This test confirms the codec preserves the exact precision of
+ * the JSON token, without rounding through an intermediate {@code double}.
  */
 class MoneyPrecisionTest {
 
@@ -37,9 +37,9 @@ class MoneyPrecisionTest {
 
     @Test
     void smallPaymentNoFloor_pureProportionalFee_matchesRealBackendExample() throws Exception {
-        // Mesmo cenário do teste de backend ExecuteSettlement_SmallPayment_NoFloor (0,9% sem piso,
-        // ver ECONOMIC_MODEL_V2_FINAL_VALIDATION.md) — confirma que o SDK não arredonda/perde
-        // precisão nesse caso limite conhecido.
+        // Same scenario as the backend test ExecuteSettlement_SmallPayment_NoFloor (0.9% with no floor,
+        // see ECONOMIC_MODEL_V2_FINAL_VALIDATION.md) — confirms the SDK doesn't round/lose
+        // precision in this known edge case.
         BigDecimal gross = new BigDecimal("1");
         BigDecimal feeRate = new BigDecimal("0.009");
         BigDecimal expectedFee = new BigDecimal("0.009");

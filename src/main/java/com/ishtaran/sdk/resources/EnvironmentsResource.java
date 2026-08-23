@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Control Plane — {@code Environments} (2 rotas reais — não existe rota real de get/list de
- * Environment em si, ver SDK_CAPABILITY_SPEC.md §11.3).
+ * Control Plane — {@code Environments} (2 real routes — there is no real get/list route for the
+ * Environment itself, see SDK_CAPABILITY_SPEC.md §11.3).
  */
 public final class EnvironmentsResource extends ApiResourceSupport {
 
@@ -25,7 +25,7 @@ public final class EnvironmentsResource extends ApiResourceSupport {
                 });
     }
 
-    /** {@code plainTextKey} só aparece nesta resposta — nunca recuperável depois. */
+    /** {@code plainTextKey} only appears in this response — never recoverable afterward. */
     public GenerateApiKeyResult generateApiKey(UUID environmentId) {
         return execute(HttpRequest.post("/v1/environments/" + environmentId + "/api-keys", "{}", false),
                 GenerateApiKeyResult.class);

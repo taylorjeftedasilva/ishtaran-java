@@ -3,9 +3,9 @@ package com.ishtaran.sdk.http;
 import com.ishtaran.sdk.auth.BearerTokenHolder;
 
 /**
- * Anexa {@code X-Api-Key} (quando configurado) e/ou {@code Authorization: Bearer} (quando um login
- * de Member já ocorreu nesta instância de client, via {@link BearerTokenHolder}) — nunca os dois
- * disfarçados um do outro (regra do brief: nunca falsificar JWT como API Key nem vice-versa).
+ * Attaches {@code X-Api-Key} (when configured) and/or {@code Authorization: Bearer} (when a Member
+ * login has already happened on this client instance, via {@link BearerTokenHolder}) — never the two
+ * disguised as each other (rule from the brief: never fake a JWT as an API Key or vice versa).
  */
 public final class AuthenticatingTransport implements HttpTransport {
 

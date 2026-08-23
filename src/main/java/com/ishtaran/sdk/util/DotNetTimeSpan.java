@@ -3,11 +3,11 @@ package com.ishtaran.sdk.util;
 import java.time.Duration;
 
 /**
- * {@code RotateApiKeyRequest.OverlapWindow} é um {@code TimeSpan} real do .NET (nenhum converter
- * customizado registrado — confirmado via grep em `OrganizationTenancy.Contracts` — então usa o
- * suporte nativo do {@code System.Text.Json} desde .NET 6, formato constante "c":
- * {@code [-][d.]hh:mm:ss[.fffffff]}). Nunca usar o formato ISO-8601 "PT..." de
- * {@code java.time.Duration.toString()} aqui — quebraria a chamada real.
+ * {@code RotateApiKeyRequest.OverlapWindow} is a real .NET {@code TimeSpan} (no custom converter
+ * registered -- confirmed via grep in `OrganizationTenancy.Contracts` -- so it uses
+ * {@code System.Text.Json}'s native support since .NET 6, constant format "c":
+ * {@code [-][d.]hh:mm:ss[.fffffff]}). Never use the ISO-8601 "PT..." format from
+ * {@code java.time.Duration.toString()} here -- it would break the real call.
  */
 public final class DotNetTimeSpan {
 

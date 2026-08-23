@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
-/** Data Plane — {@code Deposits} (3 rotas reais). */
+/** Data Plane — {@code Deposits} (3 real routes). */
 public final class DepositsResource extends ApiResourceSupport {
 
     public DepositsResource(HttpTransport transport) {
@@ -21,8 +21,8 @@ public final class DepositsResource extends ApiResourceSupport {
     }
 
     /**
-     * O {@code depositAddress} real só é exposto pelo GET dedicado ({@link #getPaymentIntent}) em
-     * seguida — nunca no corpo desta resposta (ver {@link CreatePaymentIntentResult}).
+     * The real {@code depositAddress} is only exposed by the dedicated GET ({@link #getPaymentIntent})
+     * afterwards — never in this response's body (see {@link CreatePaymentIntentResult}).
      */
     public CreatePaymentIntentResult createPaymentIntent(UUID organizationId, UUID transactionId, UUID assetNetworkId,
                                                            BigDecimal amount, OffsetDateTime expiresAt, String idempotencyKey) {
@@ -49,7 +49,7 @@ public final class DepositsResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

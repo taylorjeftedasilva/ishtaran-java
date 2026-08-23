@@ -8,8 +8,8 @@ import java.time.Duration;
 import java.util.UUID;
 
 /**
- * 03 — Receber um pagamento via Easy Mode: compõe Transaction + Payment Intent e devolve o
- * depositAddress real, com os IDs reais do Core (transactionId/paymentIntentId) para debugging.
+ * 03 — Receive a payment via Easy Mode: composes Transaction + Payment Intent and returns the
+ * real depositAddress, with the real Core IDs (transactionId/paymentIntentId) for debugging.
  */
 public final class Example03ReceivePaymentEasy {
 
@@ -34,6 +34,6 @@ public final class Example03ReceivePaymentEasy {
 
         var finished = client.waitForPayment(payment.transactionId(), payment.paymentIntentId(),
                 Duration.ofMinutes(10), Duration.ofSeconds(5));
-        System.out.println("Status final: " + finished.paymentIntentStatus());
+        System.out.println("Final status: " + finished.paymentIntentStatus());
     }
 }

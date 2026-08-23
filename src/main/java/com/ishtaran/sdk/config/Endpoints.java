@@ -1,11 +1,11 @@
 package com.ishtaran.sdk.config;
 
 /**
- * Base URLs centralizadas — nunca strings de URL espalhadas pelo SDK (regra do brief). {@link #LOCAL}
- * é o único default real conhecido hoje (docker-compose local). {@code SANDBOX}/{@code PRODUCTION}
- * não têm DNS real registrado ainda (terraform apply nunca rodou contra infraestrutura real — ver
- * SDK_CAPABILITY_SPEC.md §2) — resolver essas duas sem um {@code baseUrl} explícito é um erro de
- * configuração, nunca um fallback silencioso para um domínio inventado.
+ * Centralized base URLs — never URL strings scattered across the SDK (rule from the brief). {@link #LOCAL}
+ * is the only known real default today (local docker-compose). {@code SANDBOX}/{@code PRODUCTION}
+ * do not have real DNS registered yet (terraform apply has never run against real infrastructure — see
+ * SDK_CAPABILITY_SPEC.md §2) — resolving either of those without an explicit {@code baseUrl} is a
+ * configuration error, never a silent fallback to a made-up domain.
  */
 public final class Endpoints {
 
@@ -15,9 +15,9 @@ public final class Endpoints {
     }
 
     /**
-     * Resolve a base URL efetiva: {@code explicitBaseUrl} sempre vence quando presente (regra dura
-     * do brief — nenhum método de negócio pode substituir esta resolução por conta própria). Quando
-     * ausente, só {@link Environment#LOCAL} tem um default real; os demais lançam.
+     * Resolves the effective base URL: {@code explicitBaseUrl} always wins when present (hard rule
+     * from the brief — no business method may override this resolution on its own). When
+     * absent, only {@link Environment#LOCAL} has a real default; the others throw.
      */
     public static String resolve(Environment environment, String explicitBaseUrl) {
         if (explicitBaseUrl != null && !explicitBaseUrl.isBlank()) {
@@ -27,9 +27,9 @@ public final class Endpoints {
             return LOCAL;
         }
         throw new IllegalStateException(
-                "baseUrl explícito é obrigatório para Environment." + environment
-                        + " — nenhuma URL real de Sandbox/Production foi provisionada ainda "
-                        + "(ver SDK_CAPABILITY_SPEC.md §2). Configure IshtaranClientConfig.baseUrl(...) "
-                        + "explicitamente.");
+                "an explicit baseUrl is required for Environment." + environment
+                        + " — no real Sandbox/Production URL has been provisioned yet "
+                        + "(see SDK_CAPABILITY_SPEC.md §2). Configure IshtaranClientConfig.baseUrl(...) "
+                        + "explicitly.");
     }
 }

@@ -4,8 +4,8 @@ import com.ishtaran.sdk.IshtaranClient;
 import com.ishtaran.sdk.config.Environment;
 
 /**
- * 01 — Quickstart mínimo: API key -> client -> primeira chamada útil. Deliberadamente curto — não
- * exige entender toda a arquitetura do SDK para dar o primeiro passo (regra do brief).
+ * 01 — Minimal quickstart: API key -> client -> first useful call. Deliberately short — it does
+ * not require understanding the entire SDK architecture to take the first step (brief rule).
  */
 public final class Example01Auth {
 
@@ -15,6 +15,6 @@ public final class Example01Auth {
                 .environment(Environment.LOCAL)
                 .build();
 
-        System.out.println("Client Ishtaran pronto: " + client.accounts().getClass().getSimpleName() + " disponível.");
+        System.out.println("Ishtaran client ready: " + client.accounts().getClass().getSimpleName() + " available.");
     }
 }

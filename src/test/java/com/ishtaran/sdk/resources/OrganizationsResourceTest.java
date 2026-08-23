@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Cobre a idempotência via HEADER (não campo de corpo) — diferente dos módulos financeiros, ver SDK_CAPABILITY_SPEC.md §9. */
+/** Covers idempotency via HEADER (not a body field) — unlike the financial modules, see SDK_CAPABILITY_SPEC.md §9. */
 class OrganizationsResourceTest {
 
     @Test
@@ -22,7 +22,7 @@ class OrganizationsResourceTest {
         var headerValue = sentRequest.headers().get("Idempotency-Key");
         assertNotNull(headerValue);
         assertTrue(sentRequest.body() == null || !sentRequest.body().contains("idempotencyKey"),
-                "idempotencyKey nunca deve ir no corpo para este endpoint (é header real)");
+                "idempotencyKey must never go in the body for this endpoint (it's a real header)");
     }
 
     @Test

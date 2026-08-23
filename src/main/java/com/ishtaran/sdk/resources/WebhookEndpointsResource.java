@@ -15,9 +15,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Control Plane (gestão) — {@code WebhookEndpoints} (6 rotas reais). Sempre Member JWT — não aceita
- * API Key hoje (Known Gap real, ver SDK_CAPABILITY_SPEC.md §12.4). Verificação de assinatura em si
- * ({@link com.ishtaran.sdk.webhook.WebhookSignatureVerifier}) nunca faz chamada HTTP.
+ * Control Plane (management) -- {@code WebhookEndpoints} (6 real routes). Always Member JWT -- does
+ * not accept an API Key today (real Known Gap, see SDK_CAPABILITY_SPEC.md section 12.4). Signature
+ * verification itself ({@link com.ishtaran.sdk.webhook.WebhookSignatureVerifier}) never makes an HTTP call.
  */
 public final class WebhookEndpointsResource extends ApiResourceSupport {
 
@@ -25,7 +25,7 @@ public final class WebhookEndpointsResource extends ApiResourceSupport {
         super(transport);
     }
 
-    /** {@code secret} só é retornado aqui — guarde-o imediatamente, nunca recuperável depois. */
+    /** {@code secret} is only returned here -- save it immediately, never retrievable afterward. */
     public ConfigureWebhookEndpointResult create(UUID organizationId, String url) {
         var body = toJson(Map.of("url", url));
         return execute(HttpRequest.post("/v1/organizations/" + organizationId + "/webhook-endpoints", body, false),
@@ -42,7 +42,7 @@ public final class WebhookEndpointsResource extends ApiResourceSupport {
         return execute(HttpRequest.get("/v1/webhook-endpoints/" + webhookEndpointId), WebhookEndpointResponse.class);
     }
 
-    /** Novo {@code secret} — o anterior deixa de validar assinaturas imediatamente. */
+    /** New {@code secret} -- the previous one immediately stops validating signatures. */
     public RotateWebhookEndpointSecretResult rotateSecret(UUID webhookEndpointId) {
         return execute(HttpRequest.post("/v1/webhook-endpoints/" + webhookEndpointId + "/rotate-secret", null, false),
                 RotateWebhookEndpointSecretResult.class);
@@ -53,10 +53,10 @@ public final class WebhookEndpointsResource extends ApiResourceSupport {
     }
 
     /**
-     * {@code status} é enviado como NOME (string, case-insensitive) na query string — diferente do
-     * filtro de {@code AssetNetworkCatalog} que usa inteiro (confirmado em código-fonte:
-     * {@code Enum.Parse<WebhookDeliveryStatus>(status, ignoreCase: true)}, ver
-     * SDK_CAPABILITY_SPEC.md §9/§11.3 para outros exemplos dessa mesma assimetria real por rota).
+     * {@code status} is sent as a NAME (string, case-insensitive) in the query string -- unlike the
+     * {@code AssetNetworkCatalog} filter, which uses an integer (confirmed in source code:
+     * {@code Enum.Parse<WebhookDeliveryStatus>(status, ignoreCase: true)}, see
+     * SDK_CAPABILITY_SPEC.md section 9/11.3 for other examples of this same real per-route asymmetry).
      */
     public List<WebhookDeliveryResponse> listDeliveries(UUID webhookEndpointId, String eventType, WebhookDeliveryStatus status) {
         var query = new StringBuilder("/v1/webhook-endpoints/" + webhookEndpointId + "/deliveries?");
@@ -76,7 +76,7 @@ public final class WebhookEndpointsResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

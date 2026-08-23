@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
- * 11 — Fluxo completo de Sandbox: credita saldo de teste via Faucet e confirma. Nunca funciona
- * contra Production real (o backend rejeita simulações fora de um Environment do tipo Sandbox).
+ * 11 — Full Sandbox flow: credits a test balance via Faucet and confirms it. Never works
+ * against real Production (the backend rejects simulations outside a Sandbox-type Environment).
  */
 public final class Example11Sandbox {
 
@@ -26,9 +26,9 @@ public final class Example11Sandbox {
         System.out.println("sandboxObservedAddressId=" + observedAddress.sandboxObservedAddressId());
 
         client.sandbox().simulateConfirmation(environmentId, observedAddress.sandboxObservedAddressId(), 3, true);
-        System.out.println("Confirmação simulada — o Deposit real será processado via Outbox (assíncrono).");
+        System.out.println("Confirmation simulated — the real Deposit will be processed via Outbox (asynchronously).");
 
         var treasuryBalance = client.sandbox().getTreasuryBalance(environmentId, assetNetworkId);
-        System.out.println("Treasury observada: " + treasuryBalance.balance());
+        System.out.println("Observed Treasury: " + treasuryBalance.balance());
     }
 }

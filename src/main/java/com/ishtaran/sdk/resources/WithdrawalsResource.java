@@ -21,10 +21,10 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Data Plane — {@code Withdrawals} (7 rotas reais). {@link #quote} nunca escreve nada (leitura pura
- * — ver SDK_CAPABILITY_SPEC.md §5); {@link #request} sempre expõe
- * {@code estimatedNetworkFee}/{@code estimatedRecipientAmount} na resposta, nunca esconde a Network
- * Fee.
+ * Data Plane -- {@code Withdrawals} (7 real routes). {@link #quote} never writes anything (pure
+ * read -- see SDK_CAPABILITY_SPEC.md section 5); {@link #request} always exposes
+ * {@code estimatedNetworkFee}/{@code estimatedRecipientAmount} in the response, never hiding the
+ * Network Fee.
  */
 public final class WithdrawalsResource extends ApiResourceSupport {
 
@@ -65,8 +65,8 @@ public final class WithdrawalsResource extends ApiResourceSupport {
     }
 
     /**
-     * {@code skip}/{@code take} são paginação real (um dos únicos 2 endpoints do SDK com paginação
-     * de verdade — ver SDK_CAPABILITY_SPEC.md §12.7).
+     * {@code skip}/{@code take} are real pagination (one of only 2 endpoints in the SDK with true
+     * pagination -- see SDK_CAPABILITY_SPEC.md section 12.7).
      */
     public List<WithdrawalResponse> list(UUID organizationId, WithdrawalStatus status,
                                           OffsetDateTime from, OffsetDateTime to, Integer skip, Integer take) {
@@ -100,8 +100,8 @@ public final class WithdrawalsResource extends ApiResourceSupport {
     }
 
     /**
-     * Iterador lazy (busca próxima página sob demanda, nunca carrega tudo de uma vez) — ver
-     * SDK_CAPABILITY_SPEC.md §12.7, um dos únicos 2 endpoints com paginação real do SDK.
+     * Lazy iterator (fetches the next page on demand, never loads everything at once) -- see
+     * SDK_CAPABILITY_SPEC.md section 12.7, one of only 2 endpoints in the SDK with real pagination.
      */
     public PageIterator<WithdrawalResponse> listAll(UUID organizationId, WithdrawalStatus status,
                                                       OffsetDateTime from, OffsetDateTime to, int pageSize) {
@@ -113,8 +113,8 @@ public final class WithdrawalsResource extends ApiResourceSupport {
             WithdrawalStatus.CANCELLED, WithdrawalStatus.BROADCAST_FAILED);
 
     /**
-     * Polling seguro, nunca infinito — sempre {@code timeout}/{@code pollInterval} explícitos (ver
-     * SDK_CAPABILITY_SPEC.md §15). Termina em qualquer estado terminal real de
+     * Safe polling, never infinite -- always explicit {@code timeout}/{@code pollInterval} (see
+     * SDK_CAPABILITY_SPEC.md section 15). Terminates on any real terminal state of
      * {@link WithdrawalStatus} (Completed/Rejected/Cancelled/BroadcastFailed).
      */
     public WithdrawalResponse waitFor(UUID withdrawalId, Duration timeout, Duration pollInterval) {
@@ -126,7 +126,7 @@ public final class WithdrawalsResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

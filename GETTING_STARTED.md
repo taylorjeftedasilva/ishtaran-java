@@ -1,6 +1,6 @@
 # Getting Started
 
-## 1. Adicione a dependência
+## 1. Add the dependency
 
 ```xml
 <dependency>
@@ -10,7 +10,7 @@
 </dependency>
 ```
 
-## 2. Construa o client
+## 2. Build the client
 
 ```java
 import com.ishtaran.sdk.IshtaranClient;
@@ -22,18 +22,18 @@ var client = IshtaranClient.builder()
         .build();
 ```
 
-`Environment.SANDBOX`/`PRODUCTION` ainda não têm uma URL real conhecida (infraestrutura não
-provisionada — ver [`CONFIGURATION.md`](CONFIGURATION.md)); use `.baseUrl(...)` explicitamente
-quando apontar para um desses ambientes.
+`Environment.SANDBOX`/`PRODUCTION` don't yet have a known real URL (infrastructure not
+provisioned — see [`CONFIGURATION.md`](CONFIGURATION.md)); use `.baseUrl(...)` explicitly when
+pointing to one of those environments.
 
-## 3. Consulte um saldo (Easy Mode)
+## 3. Check a balance (Easy Mode)
 
 ```java
 var balance = client.getBalance(accountId, assetNetworkId);
 System.out.println("Available: " + balance.available());
 ```
 
-## 4. Receba um pagamento (Easy Mode)
+## 4. Receive a payment (Easy Mode)
 
 ```java
 var payment = client.receivePayment(organizationId, applicationId, payerAccountId,
@@ -41,22 +41,22 @@ var payment = client.receivePayment(organizationId, applicationId, payerAccountI
 
 System.out.println("Deposit address: " + payment.depositAddress());
 
-// Espera até o Payment Intent sair de PENDING/PARTIALLY_PAID — nunca espera para sempre.
+// Waits until the Payment Intent leaves PENDING/PARTIALLY_PAID — never waits forever.
 var finished = client.waitForPayment(payment.transactionId(), payment.paymentIntentId(),
         Duration.ofMinutes(10), Duration.ofSeconds(5));
 ```
 
-## 5. Saque com Network Fee visível (Easy Mode)
+## 5. Withdraw with a visible Network Fee (Easy Mode)
 
 ```java
 var withdrawal = client.withdraw(organizationId, accountId, assetNetworkId,
         new BigDecimal("50"), "TDestinationAddressReal", null);
 
-System.out.println("Você recebe " + withdrawal.estimatedRecipientAmount()
-        + " (taxa de rede: " + withdrawal.estimatedNetworkFee() + ")");
+System.out.println("You receive " + withdrawal.estimatedRecipientAmount()
+        + " (network fee: " + withdrawal.estimatedNetworkFee() + ")");
 ```
 
-## 6. Ou use o Core diretamente
+## 6. Or use Core directly
 
 ```java
 var account = client.accounts().get(accountId);
@@ -64,9 +64,9 @@ var transactions = client.transactions().get(transactionId);
 var quote = client.withdrawals().quote(organizationId, accountId, destinationId, assetNetworkId, amount);
 ```
 
-## Próximos passos
+## Next steps
 
-- [`AUTHENTICATION.md`](AUTHENTICATION.md) — quando usar API Key vs. login de Member
-- [`EASY_MODE.md`](EASY_MODE.md) — critério completo de quando usar cada camada
-- [`ERROR_HANDLING.md`](ERROR_HANDLING.md) — tratando `IshtaranError`
-- [`examples/`](examples/) — 11 exemplos numerados, do quickstart ao Sandbox completo
+- [`AUTHENTICATION.md`](AUTHENTICATION.md) — when to use an API Key vs. Member login
+- [`EASY_MODE.md`](EASY_MODE.md) — complete criteria for when to use each layer
+- [`ERROR_HANDLING.md`](ERROR_HANDLING.md) — handling `IshtaranError`
+- [`examples/`](examples/) — 11 numbered examples, from quickstart to full Sandbox

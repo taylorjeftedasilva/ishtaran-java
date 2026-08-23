@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * Testa a lógica de COMPOSIÇÃO do Easy Mode de ponta a ponta (não só um resource isolado) — usa o
- * construtor package-private {@code IshtaranClient(HttpTransport)} para injetar
- * {@link FakeHttpTransport}, sem rede real.
+ * Tests the COMPOSITION logic of Easy Mode end-to-end (not just an isolated resource) — uses the
+ * package-private constructor {@code IshtaranClient(HttpTransport)} to inject
+ * {@link FakeHttpTransport}, with no real network.
  */
 class IshtaranClientEasyModeTest {
 

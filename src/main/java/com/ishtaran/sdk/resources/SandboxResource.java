@@ -16,9 +16,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Data Plane, exclusivo de {@code Environment} do tipo Sandbox — {@code Sandbox} (9 rotas reais).
- * Nunca disponível/válido contra Production (o próprio backend rejeita com 422 se o Environment não
- * for Sandbox).
+ * Data Plane, exclusive to {@code Environment} of type Sandbox — {@code Sandbox} (9 real routes).
+ * Never available/valid against Production (the backend itself rejects with 422 if the Environment is
+ * not Sandbox).
  */
 public final class SandboxResource extends ApiResourceSupport {
 
@@ -89,7 +89,7 @@ public final class SandboxResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

@@ -13,14 +13,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
-/** Data Plane — {@code Refunds} (3 rotas reais, sob o mesmo módulo real {@code Settlement}). */
+/** Data Plane — {@code Refunds} (3 real routes, under the same real {@code Settlement} module). */
 public final class RefundsResource extends ApiResourceSupport {
 
     public RefundsResource(HttpTransport transport) {
         super(transport);
     }
 
-    /** {@code amount} nulo = reembolso total. */
+    /** {@code amount} null = full refund. */
     public ExecuteRefundResult executeRefund(UUID transactionId, BigDecimal amount, String reason, String idempotencyKey) {
         var payload = new LinkedHashMap<String, Object>();
         payload.put("amount", amount);
@@ -45,7 +45,7 @@ public final class RefundsResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

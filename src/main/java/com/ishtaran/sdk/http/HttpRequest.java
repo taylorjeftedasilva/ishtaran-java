@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Requisição interna, independente de biblioteca de transporte — nunca vaza {@code java.net.http}
- * (ou qualquer lib HTTP concreta) na superfície pública, permitindo testar {@code resources/*} com
- * um {@link HttpTransport} falso, sem rede.
+ * Internal request, independent of any transport library — never leaks {@code java.net.http}
+ * (or any concrete HTTP lib) into the public surface, allowing {@code resources/*} to be tested with
+ * a fake {@link HttpTransport}, with no network.
  */
 public final class HttpRequest {
 
@@ -58,7 +58,7 @@ public final class HttpRequest {
         return body;
     }
 
-    /** Chamadas com Idempotency-Key (ou GET, naturalmente idempotente) podem ter 5xx retried com segurança (§8 do Capability Spec). */
+    /** Calls with an Idempotency-Key (or GET, naturally idempotent) can have 5xx safely retried (§8 of the Capability Spec). */
     public boolean idempotent() {
         return idempotent;
     }

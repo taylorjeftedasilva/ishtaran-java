@@ -1,6 +1,6 @@
 package com.ishtaran.sdk.error;
 
-/** Falha de transporte — sem nenhuma resposta HTTP (conexão recusada/reset, DNS, etc.). Sempre retryable. */
+/** Transport failure — no HTTP response at all (connection refused/reset, DNS, etc.). Always retryable. */
 public final class NetworkError extends IshtaranError {
     public NetworkError(String message, Throwable cause) {
         super(message, null, null, null, null, true);

@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Catálogo — {@code AssetNetworkCatalog} (6 rotas reais, só leitura no escopo do SDK — as 5 rotas
- * de mutação são exclusivas de Platform Owner, fora de escopo). Sempre Member JWT — não aceita API
- * Key hoje (Known Gap real, ver SDK_CAPABILITY_SPEC.md §12.3).
+ * Catalog — {@code AssetNetworkCatalog} (6 real routes, read-only in the SDK's scope — the 5 mutation
+ * routes are exclusive to Platform Owner, out of scope). Always Member JWT — does not accept API
+ * Key today (real Known Gap, see SDK_CAPABILITY_SPEC.md §12.3).
  */
 public final class AssetNetworkCatalogResource extends ApiResourceSupport {
 
@@ -41,9 +41,9 @@ public final class AssetNetworkCatalogResource extends ApiResourceSupport {
     }
 
     /**
-     * {@code status} é enviado como inteiro bruto na query string, per o contrato documentado do
-     * OpenAPI real ({@code AssetNetworkCatalog.Contracts.Enums.AssetNetworkStatus}) — mesmo a
-     * resposta devolvendo o status como string (Grupo A). Filtro opcional.
+     * {@code status} is sent as a raw integer in the query string, per the documented contract of the
+     * real OpenAPI ({@code AssetNetworkCatalog.Contracts.Enums.AssetNetworkStatus}) — even though the
+     * response returns the status as a string (Group A). Optional filter.
      */
     public List<AssetNetworkResponse> listAssetNetworks(AssetNetworkStatus status) {
         var path = "/v1/asset-networks" + (status != null ? "?status=" + toRequestRawValue(status) : "");
@@ -60,7 +60,7 @@ public final class AssetNetworkCatalogResource extends ApiResourceSupport {
             case "ENABLED" -> 1;
             case "PAUSED" -> 2;
             case "DISABLED" -> 3;
-            default -> throw new IllegalArgumentException("Valor de AssetNetworkStatus desconhecido para filtro: " + status);
+            default -> throw new IllegalArgumentException("Unknown AssetNetworkStatus value for filter: " + status);
         };
     }
 }

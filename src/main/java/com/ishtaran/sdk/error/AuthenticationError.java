@@ -1,6 +1,6 @@
 package com.ishtaran.sdk.error;
 
-/** 401 — sem corpo JSON (ver SDK_CAPABILITY_SPEC.md §6.3). {@code code}/{@code details} são sempre nulos. */
+/** 401 — no JSON body (see SDK_CAPABILITY_SPEC.md §6.3). {@code code}/{@code details} are always null. */
 public final class AuthenticationError extends IshtaranError {
     public AuthenticationError(String message) {
         super(message, 401, null, null, null, false);

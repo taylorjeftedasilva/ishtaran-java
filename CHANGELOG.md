@@ -1,32 +1,33 @@
 # Changelog
 
-Segue [SemVer](https://semver.org/). Ainda não publicado (Maven Central) — versões abaixo refletem
-o estado do desenvolvimento local.
+Follows [SemVer](https://semver.org/). Not yet published (Maven Central) — versions below reflect
+the state of local development.
 
 ## [1.0.0-SNAPSHOT] — 2026-08-17
 
-Primeira implementação — Java é a linguagem de referência do Ishtaran Official SDK Program.
+First implementation — Java is the reference language of the Ishtaran Official SDK Program.
 
-### Adicionado
+### Added
 
-- Client central (`IshtaranClient`, builder, `IshtaranClientConfig`).
-- Core API completo — 16 módulos, 93 operações reais (Organizations, Applications, Environments,
+- Central client (`IshtaranClient`, builder, `IshtaranClientConfig`).
+- Complete Core API — 16 modules, 93 real operations (Organizations, Applications, Environments,
   ApiKeys, Members, AssetNetworkCatalog, Accounts, Transactions, Deposits, Ledger, Settlements,
   Refunds, Withdrawals, WorkflowRules/EventTypes/Events, Sandbox, WebhookEndpoints/Deliveries).
 - Easy Mode — `receivePayment`/`getPayment`/`waitForPayment`, `withdraw`, `getBalance`,
   `verifyWebhookSignature`.
-- Autenticação `X-Api-Key` + Member JWT (`auth().login()`).
-- Hierarquia `IshtaranError` completa (10 subtipos) com mapeamento fiel ao `ProblemDetails` real.
-- Retry seguro com backoff+jitter, respeitando `Retry-After`.
-- Idempotência (campo de corpo E header, conforme o endpoint real) com auto-geração.
-- Paginação real (`PageIterator`, 2 endpoints) + listas simples para os demais.
-- Enums com fallback `UNKNOWN` preservando o valor bruto (forward-compatibility real).
-- `WebhookSignatureVerifier` (HMAC-SHA256, tempo constante, tolerância de replay).
-- Logging opt-in com redação central de secrets.
-- Empacotamento Maven validado via dry run real (consumo por projeto Maven e Gradle de amostra).
+- `X-Api-Key` + Member JWT authentication (`auth().login()`).
+- Complete `IshtaranError` hierarchy (10 subtypes) with mapping faithful to the real
+  `ProblemDetails`.
+- Safe retry with backoff+jitter, respecting `Retry-After`.
+- Idempotency (body field AND header, depending on the real endpoint) with auto-generation.
+- Real pagination (`PageIterator`, 2 endpoints) + plain lists for the rest.
+- Enums with `UNKNOWN` fallback preserving the raw value (real forward-compatibility).
+- `WebhookSignatureVerifier` (HMAC-SHA256, constant-time, replay tolerance).
+- Opt-in logging with central secret redaction.
+- Maven packaging validated via a real dry run (consumption by sample Maven and Gradle projects).
 
-### Conhecido, ainda pendente
+### Known, still pending
 
-- Documentação de exemplos completos (`examples/`) — ver `SECURITY_REVIEW.md` e
-  `JAVA_SDK_CHECKPOINT.md` para o estado exato.
-- Publicação real no Maven Central — bloqueada por decisão de licenciamento pendente.
+- Complete example documentation (`examples/`) — see `SECURITY_REVIEW.md` and
+  `JAVA_SDK_CHECKPOINT.md` for the exact state.
+- Actual publication to Maven Central — blocked by a pending licensing decision.

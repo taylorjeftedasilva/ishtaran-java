@@ -14,10 +14,10 @@
     <url>https://ishtaran.com</url>
 
     <!--
-        Licença: decisão de projeto ainda não tomada (ver SDK_CAPABILITY_SPEC.md §16 e
-        docs/product-definition/16-DECISION-LOG.md — nenhuma entrada de licença de software
-        existe hoje). Placeholder explícito, nunca assumido como open-source silenciosamente.
-        Bloqueia publicação externa (Maven Central), não bloqueia build/uso interno.
+        License: project decision not yet made (see SDK_CAPABILITY_SPEC.md §16 and
+        docs/product-definition/16-DECISION-LOG.md — no software license entry exists
+        today). Explicit placeholder, never silently assumed as open-source.
+        Blocks external publication (Maven Central), does not block internal build/use.
     -->
     <licenses>
         <license>
@@ -35,9 +35,11 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jackson.version>2.17.2</jackson.version>
+        <jackson.version>2.18.8</jackson.version>
         <slf4j.version>2.0.16</slf4j.version>
         <junit.version>5.11.0</junit.version>
+        <bitcoinj.version>0.17.1</bitcoinj.version>
+        <bouncycastle.version>1.84</bouncycastle.version>
     </properties>
 
     <dependencies>
@@ -55,6 +57,33 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>
+        <!--
+            SDK Self-Custody Support (SPEC-018/019/020, Java-equivalent of TDR-017) — BIP32/BIP39/BIP44
+            derivation (public AND private key locally, never sent to Ishtaran,
+            INV-SC-01) and ECDSA/secp256k1 signing. bitcoinj is the de facto standard in the Java
+            ecosystem for this math (the same role NBitcoin plays in .NET, TDR-017) — it already
+            depends on Bouncy Castle internally for elliptic curve operations.
+        -->
+        <dependency>
+            <groupId>org.bitcoinj</groupId>
+            <artifactId>bitcoinj-core</artifactId>
+            <version>${bitcoinj.version}</version>
+        </dependency>
+        <!-- Real Keccak-256 (Tron/Ethereum), different from the NIST-finalized SHA3-256; .NET/JDK don't have this built in; same choice as TDR-017. -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <!-- Explicit pin, not just a transitive dependency of bitcoinj-core: without this, Maven
+             resolves bcprov-jdk15to18 to whatever version bitcoinj-core's own POM declares, which
+             has lagged behind real CVE fixes (CVE-2025-14813, CRITICAL), since an explicit direct
+             dependency always wins over a transitive one in Maven's resolution. -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15to18</artifactId>
+            <version>${bouncycastle.version}</version>
         </dependency>
 
         <!-- test-only -->
@@ -108,9 +137,9 @@
     </build>
 
     <!--
-        Publicação real (Maven Central via Central Publishing Portal, assinatura GPG) fica
-        preparada mas NUNCA executada sem autorização explícita do usuário — ver
-        JAVA_SDK_IMPLEMENTATION_PLAN.md §11 e a regra correspondente do brief do SDK Program.
-        <distributionManagement>/<profiles> de release ficam para quando essa autorização existir.
+        Real publication (Maven Central via the Central Publishing Portal, GPG signing) is kept
+        prepared but NEVER executed without explicit user authorization — see
+        JAVA_SDK_IMPLEMENTATION_PLAN.md §11 and the corresponding rule in the SDK Program brief.
+        Release <distributionManagement>/<profiles> are left for when that authorization exists.
     -->
 </project>

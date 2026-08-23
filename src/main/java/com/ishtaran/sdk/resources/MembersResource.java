@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/** Control Plane — {@code Members} (7 rotas reais, IdentityAccess). */
+/** Control Plane — {@code Members} (7 real routes, IdentityAccess). */
 public final class MembersResource extends ApiResourceSupport {
 
     public MembersResource(HttpTransport transport) {
@@ -26,7 +26,7 @@ public final class MembersResource extends ApiResourceSupport {
                 InviteMemberResult.class);
     }
 
-    /** Devolve o token real de acesso — mesmo mecanismo de {@code auth().login()} preenche a sessão do client. */
+    /** Returns the real access token — the same mechanism {@code auth().login()} uses fills the client's session. */
     public TokenResult acceptInvite(String inviteToken, String password) {
         var body = toJson(Map.of("inviteToken", inviteToken, "password", password));
         return execute(HttpRequest.post("/v1/members/accept-invite", body, false), TokenResult.class);
@@ -60,7 +60,7 @@ public final class MembersResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

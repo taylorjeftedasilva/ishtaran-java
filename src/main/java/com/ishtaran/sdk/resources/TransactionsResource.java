@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-/** Data Plane — {@code Transactions} (7 rotas reais). */
+/** Data Plane — {@code Transactions} (7 real routes). */
 public final class TransactionsResource extends ApiResourceSupport {
 
     public TransactionsResource(HttpTransport transport) {
@@ -73,9 +73,9 @@ public final class TransactionsResource extends ApiResourceSupport {
             TransactionStatus.SETTLED, TransactionStatus.REFUNDED, TransactionStatus.CANCELLED);
 
     /**
-     * Polling seguro, nunca infinito — sempre {@code timeout}/{@code pollInterval} explícitos (ver
-     * SDK_CAPABILITY_SPEC.md §15). Termina em Settled/Refunded/Cancelled — nunca em
-     * Frozen/PartiallySettled/PartiallyRefunded, que ainda podem mudar.
+     * Safe polling, never infinite — always explicit {@code timeout}/{@code pollInterval} (see
+     * SDK_CAPABILITY_SPEC.md §15). Terminates on Settled/Refunded/Cancelled — never on
+     * Frozen/PartiallySettled/PartiallyRefunded, which can still change.
      */
     public TransactionResponse waitFor(UUID transactionId, Duration timeout, Duration pollInterval) {
         return Polling.until(() -> get(transactionId), r -> TERMINAL_STATUSES.contains(r.status()),
@@ -86,7 +86,7 @@ public final class TransactionsResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

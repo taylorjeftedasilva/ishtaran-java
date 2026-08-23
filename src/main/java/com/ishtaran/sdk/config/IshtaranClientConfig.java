@@ -7,9 +7,9 @@ import java.time.Duration;
 import java.util.Objects;
 
 /**
- * Configuração central única do client — fonte de verdade de defaults (baseUrl/apiKey/timeout/
- * environment/userAgent/retryPolicy), nunca dispersa entre resources individuais. Imutável após
- * construção.
+ * Single central client configuration — source of truth for defaults (baseUrl/apiKey/timeout/
+ * environment/userAgent/retryPolicy), never scattered across individual resources. Immutable after
+ * construction.
  */
 public final class IshtaranClientConfig {
 
@@ -36,8 +36,8 @@ public final class IshtaranClientConfig {
 
         if (this.allowInsecureTlsForLocalDevelopment && this.environment != Environment.LOCAL) {
             throw new IllegalStateException(
-                    "allowInsecureTlsForLocalDevelopment só pode ser usado com Environment.LOCAL — "
-                            + "nunca contra Sandbox/Production.");
+                    "allowInsecureTlsForLocalDevelopment can only be used with Environment.LOCAL — "
+                            + "never against Sandbox/Production.");
         }
     }
 
@@ -139,7 +139,7 @@ public final class IshtaranClientConfig {
             return this;
         }
 
-        /** Nunca usar contra Sandbox/Production — lança em {@code build()} se combinado com outro Environment. */
+        /** Never use against Sandbox/Production — throws in {@code build()} if combined with another Environment. */
         public Builder allowInsecureTlsForLocalDevelopment(boolean allow) {
             this.allowInsecureTlsForLocalDevelopment = allow;
             return this;

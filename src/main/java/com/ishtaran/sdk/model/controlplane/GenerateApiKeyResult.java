@@ -2,6 +2,6 @@ package com.ishtaran.sdk.model.controlplane;
 
 import java.util.UUID;
 
-/** {@code plainTextKey} só é exposto UMA vez, nesta resposta — nunca recuperável depois (mesma regra do backend real). */
+/** {@code plainTextKey} is exposed ONLY ONCE, in this response — never recoverable afterward (same rule as the real backend). */
 public record GenerateApiKeyResult(UUID apiKeyId, String plainTextKey) {
 }

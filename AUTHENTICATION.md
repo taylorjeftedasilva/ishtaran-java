@@ -1,42 +1,43 @@
 # Authentication
 
-Dois mecanismos reais — nunca um simulado como o outro (ver `SDK_CAPABILITY_SPEC.md` §3).
+Two real mechanisms — never one simulated by the other (see `SDK_CAPABILITY_SPEC.md` §3).
 
-## `X-Api-Key` (recomendado — machine-to-machine)
+## `X-Api-Key` (recommended — machine-to-machine)
 
 ```java
 var client = IshtaranClient.builder()
-        .apiKey("<sua API Key de Application/Environment>")
+        .apiKey("<your Application/Environment API Key>")
         .environment(Environment.LOCAL)
         .build();
 ```
 
-- Header real: `X-Api-Key` (nunca `Authorization: Bearer`).
-- Confere identidade de `Organization`+`Application`+`Environment` inteiros — sem RBAC granular.
-- Funciona em leitura **e escrita** para os 8 módulos Data Plane: `Accounts`, `Transactions`,
+- Real header: `X-Api-Key` (never `Authorization: Bearer`).
+- Confirms the identity of an entire `Organization`+`Application`+`Environment` — no granular RBAC.
+- Works for read **and write** on the 8 Data Plane modules: `Accounts`, `Transactions`,
   `Deposits`, `Ledger`, `Settlements`/`Refunds`, `Withdrawals`, `WorkflowRules`, `Sandbox`.
-- **Não funciona hoje** para: `Organizations`/`Applications`/`Environments`/`Members`/`ApiKeys`
-  (Control Plane), leitura de `AssetNetworkCatalog`, gestão de `WebhookEndpoint` — só Member JWT
-  (lacunas reais da API, ver `SDK_CAPABILITY_SPEC.md` §12.3/§12.4).
-- Sem prefixo de ambiente (`sk_live_`/`sk_test_` não existem de verdade) — o isolamento
-  Sandbox/Production vem inteiramente de infraestrutura física separada, não do formato da chave.
+- **Does not work today** for: `Organizations`/`Applications`/`Environments`/`Members`/`ApiKeys`
+  (Control Plane), reading `AssetNetworkCatalog`, managing `WebhookEndpoint` — Member JWT only
+  (real API gaps, see `SDK_CAPABILITY_SPEC.md` §12.3/§12.4).
+- No environment prefix (`sk_live_`/`sk_test_` don't really exist) — Sandbox/Production
+  isolation comes entirely from separate physical infrastructure, not from the key's format.
 
-## Member JWT (login humano — obrigatório para Control Plane)
+## Member JWT (human login — required for Control Plane)
 
 ```java
 var token = client.auth().login(email, password);
-// client agora usa o token internamente em toda chamada de Control Plane subsequente.
+// The client now uses the token internally for every subsequent Control Plane call.
 
 var organizations = client.organizations().get(organizationId);
 ```
 
-`client.auth().login(...)` guarda o `accessToken` internamente — chamadas seguintes reutilizam-no
-automaticamente via `Authorization: Bearer`, sem repasse manual.
+`client.auth().login(...)` stores the `accessToken` internally — subsequent calls reuse it
+automatically via `Authorization: Bearer`, with no manual passing required.
 
-## Nunca misture os dois
+## Never mix the two
 
-O SDK nunca envia a API Key como Bearer nem o JWT como `X-Api-Key` — cada credencial vai sempre no
-header real correspondente. Se ambos estiverem configurados (API Key no `IshtaranClientConfig` +
-login feito), os dois headers são enviados nas rotas Data Plane (dual-scheme); qual dos dois o
-backend usa quando ambos representam identidades diferentes não foi verificado ao vivo por este
-SDK — evite configurar os dois simultaneamente contra Organizations diferentes.
+The SDK never sends the API Key as a Bearer token, nor the JWT as `X-Api-Key` — each credential
+always goes in its corresponding real header. If both are configured (API Key in
+`IshtaranClientConfig` + login performed), both headers are sent on Data Plane routes
+(dual-scheme); which one the backend uses when both represent different identities has not been
+verified live by this SDK — avoid configuring both simultaneously against different
+Organizations.

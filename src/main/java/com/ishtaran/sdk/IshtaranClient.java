@@ -13,6 +13,7 @@ import com.ishtaran.sdk.model.dataplane.CreateWithdrawalDestinationResult;
 import com.ishtaran.sdk.model.dataplane.ParticipantInput;
 import com.ishtaran.sdk.model.enums.PaymentIntentStatus;
 import com.ishtaran.sdk.resources.AccountsResource;
+import com.ishtaran.sdk.resources.AccountHoldersResource;
 import com.ishtaran.sdk.resources.ApiKeysResource;
 import com.ishtaran.sdk.resources.ApplicationsResource;
 import com.ishtaran.sdk.resources.AssetNetworkCatalogResource;
@@ -27,8 +28,10 @@ import com.ishtaran.sdk.resources.OrganizationsResource;
 import com.ishtaran.sdk.resources.RefundsResource;
 import com.ishtaran.sdk.resources.SandboxResource;
 import com.ishtaran.sdk.resources.SettlementsResource;
+import com.ishtaran.sdk.resources.SigningRequestsResource;
 import com.ishtaran.sdk.resources.TransactionsResource;
 import com.ishtaran.sdk.resources.WebhookDeliveriesResource;
+import com.ishtaran.sdk.resources.WalletsResource;
 import com.ishtaran.sdk.resources.WebhookEndpointsResource;
 import com.ishtaran.sdk.resources.WithdrawalsResource;
 import com.ishtaran.sdk.resources.WorkflowsResource;
@@ -40,11 +43,11 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Fachada pública única do SDK — imutável/thread-safe após {@link #builder()}.{@code build()}
- * (nenhum estado mutável compartilhado exceto {@link BearerTokenHolder}, que é uma
- * {@code AtomicReference} interna). Compõe Core ({@code resources.*}) e Easy Mode
- * ({@code easy.*}) sobre o MESMO transporte HTTP — Easy Mode nunca duplica lógica de negócio, só
- * combina chamadas Core (ver SDK_CAPABILITY_SPEC.md §5).
+ * The SDK's single public facade -- immutable/thread-safe after {@link #builder()}.{@code build()}
+ * (no shared mutable state except {@link BearerTokenHolder}, which is an internal
+ * {@code AtomicReference}). Composes Core ({@code resources.*}) and Easy Mode
+ * ({@code easy.*}) over the SAME HTTP transport -- Easy Mode never duplicates business logic, it
+ * only combines Core calls (see SDK_CAPABILITY_SPEC.md section 5).
  */
 public final class IshtaranClient {
 
@@ -56,6 +59,7 @@ public final class IshtaranClient {
     private final MembersResource members;
     private final AssetNetworkCatalogResource assetNetworkCatalog;
     private final AccountsResource accounts;
+    private final AccountHoldersResource accountHolders;
     private final TransactionsResource transactions;
     private final DepositsResource deposits;
     private final LedgerResource ledger;
@@ -68,6 +72,8 @@ public final class IshtaranClient {
     private final SandboxResource sandbox;
     private final WebhookEndpointsResource webhookEndpoints;
     private final WebhookDeliveriesResource webhookDeliveries;
+    private final WalletsResource wallets;
+    private final SigningRequestsResource signingRequests;
 
     private IshtaranClient(IshtaranClientConfig config) {
         this(decorateWithLogging(new JdkHttpTransport(config), config), config.apiKey(), config.retryPolicy());
@@ -78,11 +84,11 @@ public final class IshtaranClient {
     }
 
     /**
-     * Construtor package-private para testes — permite injetar um {@link HttpTransport} falso
-     * (sem rede) e exercitar a lógica de composição do Easy Mode (ex.: {@code receivePayment}) de
-     * ponta a ponta, não só resource a resource. Nunca exposto publicamente — a API pública sempre
-     * passa por {@link #builder()}. Sem retry/API Key (testes de composição não precisam disso —
-     * retry e autenticação já têm suíte própria em {@code RetryingTransportTest}/
+     * Package-private constructor for tests -- lets a fake {@link HttpTransport} be injected
+     * (no network) to exercise Easy Mode's composition logic (e.g. {@code receivePayment})
+     * end to end, not just resource by resource. Never exposed publicly -- the public API always
+     * goes through {@link #builder()}. No retry/API Key (composition tests don't need that --
+     * retry and authentication already have their own suites in {@code RetryingTransportTest}/
      * {@code AuthenticatingTransportTest}).
      */
     IshtaranClient(HttpTransport transport) {
@@ -94,6 +100,14 @@ public final class IshtaranClient {
         HttpTransport transport = new AuthenticatingTransport(rawTransport, apiKey, bearerTokenHolder);
         transport = new RetryingTransport(transport, retryPolicy);
 
+        // DEC-032 -- dedicated transport for AccountHolder, never the Organization's apiKey nor the
+        // Member bearerTokenHolder above: complete domain separation between the two principals,
+        // same reasoning as AccountHolderJwtScheme never sharing a key with MemberJwtScheme
+        // on the backend.
+        var accountHolderTokenHolder = new BearerTokenHolder();
+        HttpTransport accountHolderTransport = new AuthenticatingTransport(rawTransport, null, accountHolderTokenHolder);
+        accountHolderTransport = new RetryingTransport(accountHolderTransport, retryPolicy);
+
         this.auth = new AuthResource(transport, bearerTokenHolder);
         this.organizations = new OrganizationsResource(transport);
         this.applications = new ApplicationsResource(transport);
@@ -102,6 +116,7 @@ public final class IshtaranClient {
         this.members = new MembersResource(transport);
         this.assetNetworkCatalog = new AssetNetworkCatalogResource(transport);
         this.accounts = new AccountsResource(transport);
+        this.accountHolders = new AccountHoldersResource(accountHolderTransport, accountHolderTokenHolder);
         this.transactions = new TransactionsResource(transport);
         this.deposits = new DepositsResource(transport);
         this.ledger = new LedgerResource(transport);
@@ -114,6 +129,8 @@ public final class IshtaranClient {
         this.sandbox = new SandboxResource(transport);
         this.webhookEndpoints = new WebhookEndpointsResource(transport);
         this.webhookDeliveries = new WebhookDeliveriesResource(transport);
+        this.wallets = new WalletsResource(transport);
+        this.signingRequests = new SigningRequestsResource(transport);
     }
 
     public static Builder builder() {
@@ -152,6 +169,11 @@ public final class IshtaranClient {
 
     public AccountsResource accounts() {
         return accounts;
+    }
+
+    /** DEC-032 -- self-service, isolated {@code AccountHolder} session (never shares a token with Member/API Key from this same instance). */
+    public AccountHoldersResource accountHolders() {
+        return accountHolders;
     }
 
     public TransactionsResource transactions() {
@@ -202,17 +224,27 @@ public final class IshtaranClient {
         return webhookDeliveries;
     }
 
+    /** SPEC-018/021, checkpoint 7 -- only the extended PUBLIC key travels through this client (INV-SC-01). */
+    public WalletsResource wallets() {
+        return wallets;
+    }
+
+    /** SPEC-019/020/021, checkpoint 7 -- the SDK signs locally ({@link com.ishtaran.sdk.wallet.Signer}) and submits it back. */
+    public SigningRequestsResource signingRequests() {
+        return signingRequests;
+    }
+
     // ---- Easy Mode ----
 
-    /** Passagem direta para {@code ledger().getBalance()} — sem transformação de negócio (ver SDK_CAPABILITY_SPEC.md §5). */
+    /** Direct pass-through to {@code ledger().getBalance()} -- no business transformation (see SDK_CAPABILITY_SPEC.md section 5). */
     public com.ishtaran.sdk.model.dataplane.BalanceResponse getBalance(UUID accountId, UUID assetNetworkId) {
         return ledger.getBalance(accountId, assetNetworkId);
     }
 
     /**
-     * Compõe {@code withdrawals().createDestination()} (se necessário) + {@code .request()} —
-     * nunca esconde a Network Fee, sempre devolve o {@code withdrawalId} real do Core. Se
-     * {@code existingDestinationId} for nulo, cria um destino novo primeiro.
+     * Composes {@code withdrawals().createDestination()} (if needed) + {@code .request()} --
+     * never hides the Network Fee, always returns the real {@code withdrawalId} from Core. If
+     * {@code existingDestinationId} is null, creates a new destination first.
      */
     public EasyWithdrawResult withdraw(UUID organizationId, UUID accountId, UUID assetNetworkId,
                                         BigDecimal amount, String destinationAddress, UUID existingDestinationId) {
@@ -233,18 +265,18 @@ public final class IshtaranClient {
                 result.status());
     }
 
-    /** Sem chamada HTTP — cálculo local (ver SDK_CAPABILITY_SPEC.md §10). */
+    /** No HTTP call -- local computation (see SDK_CAPABILITY_SPEC.md section 10). */
     public boolean verifyWebhookSignature(String rawBody, String signatureHeader, String timestampHeader, String endpointSecret) {
         return WebhookSignatureVerifier.verify(rawBody, signatureHeader, timestampHeader, endpointSecret);
     }
 
     /**
-     * Compõe {@code transactions().create()} + {@code deposits().createPaymentIntent()} + um GET
-     * de acompanhamento para obter o {@code depositAddress} real (só exposto pelo GET dedicado, não
-     * pelo POST de criação — mesmo comportamento real documentado em
+     * Composes {@code transactions().create()} + {@code deposits().createPaymentIntent()} + a
+     * follow-up GET to obtain the real {@code depositAddress} (only exposed by the dedicated GET,
+     * not by the creation POST -- same real behavior documented in
      * {@code examples/quickstart-node/index.js}). {@code payerAccountId}/{@code recipientAccountId}
-     * devem já existir e estar autorizados para a Application (regra de negócio real, não uma
-     * limitação do SDK).
+     * must already exist and be authorized for the Application (a real business rule, not an
+     * SDK limitation).
      */
     public EasyPaymentResult receivePayment(UUID organizationId, UUID applicationId, UUID payerAccountId,
                                              UUID recipientAccountId, UUID assetNetworkId, BigDecimal amount) {
@@ -268,10 +300,10 @@ public final class IshtaranClient {
     }
 
     /**
-     * Polling seguro — nunca infinito, sempre com {@code timeout} e {@code pollInterval}
-     * explícitos (ver SDK_CAPABILITY_SPEC.md §15). Termina quando o Payment Intent sai de
-     * {@code PENDING}/{@code PARTIALLY_PAID} (ou seja, {@code PAID}/{@code EXPIRED}/
-     * {@code CANCELLED}), ou lança {@link TimeoutError} se o prazo se esgotar antes.
+     * Safe polling -- never infinite, always with an explicit {@code timeout} and
+     * {@code pollInterval} (see SDK_CAPABILITY_SPEC.md section 15). Terminates once the Payment
+     * Intent leaves {@code PENDING}/{@code PARTIALLY_PAID} (i.e. {@code PAID}/{@code EXPIRED}/
+     * {@code CANCELLED}), or throws {@link TimeoutError} if the deadline runs out first.
      */
     public EasyPaymentResult waitForPayment(UUID transactionId, UUID paymentIntentId, Duration timeout, Duration pollInterval) {
         return com.ishtaran.sdk.util.Polling.until(

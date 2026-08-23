@@ -7,9 +7,9 @@ import com.ishtaran.sdk.webhook.WebhookSignatureVerifier;
 import java.time.Instant;
 
 /**
- * 10 — Verificação de assinatura de webhook. Único exemplo 100% executável sem uma API real
- * rodando (cálculo local, sem chamada HTTP) — simula uma entrega real da plataforma para
- * demonstrar o protocolo completo, incluindo o caso de payload adulterado sendo rejeitado.
+ * 10 — Webhook signature verification. The only example that is 100% runnable without a real
+ * API running (local computation, no HTTP call) — it simulates a real platform delivery to
+ * demonstrate the full protocol, including the tampered-payload rejection case.
  */
 public final class Example10WebhookVerification {
 
@@ -23,18 +23,18 @@ public final class Example10WebhookVerification {
         String rawBody = "{\"eventType\":\"payment.received\",\"amount\":100}";
         long timestamp = Instant.now().getEpochSecond();
 
-        // Do lado da plataforma: assinatura calculada e enviada nos headers X-Webhook-Signature/
-        // X-Webhook-Timestamp junto com o rawBody como corpo da entrega HTTP real.
+        // On the platform side: signature computed and sent in the X-Webhook-Signature/
+        // X-Webhook-Timestamp headers together with the rawBody as the real HTTP delivery body.
         String signature = WebhookSignatureVerifier.compute(timestamp, rawBody, endpointSecret);
-        System.out.println("Assinatura calculada (simulando a plataforma): " + signature);
+        System.out.println("Computed signature (simulating the platform): " + signature);
 
-        // Do lado do integrador: verificação real usando o SDK, sem chamada de rede.
+        // On the integrator side: real verification using the SDK, with no network call.
         boolean valid = client.verifyWebhookSignature(rawBody, signature, String.valueOf(timestamp), endpointSecret);
-        System.out.println("Assinatura válida? " + valid);
+        System.out.println("Signature valid? " + valid);
 
-        // Payload adulterado depois do envio -- a verificação deve rejeitar.
+        // Payload tampered with after sending -- verification must reject it.
         String tamperedBody = "{\"eventType\":\"payment.received\",\"amount\":999999}";
         boolean tamperedValid = client.verifyWebhookSignature(tamperedBody, signature, String.valueOf(timestamp), endpointSecret);
-        System.out.println("Payload adulterado ainda válido? " + tamperedValid + " (esperado: false)");
+        System.out.println("Tampered payload still valid? " + tamperedValid + " (expected: false)");
     }
 }

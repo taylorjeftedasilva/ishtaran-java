@@ -1,30 +1,30 @@
 # Retries
 
-Retry automático só em cenários seguros — ver `SDK_CAPABILITY_SPEC.md` §8.
+Automatic retry only in safe scenarios — see `SDK_CAPABILITY_SPEC.md` §8.
 
-| Cenário | Retry? |
+| Scenario | Retry? |
 |---|---|
-| Falha de conexão (reset, connect timeout) | Sempre |
-| HTTP 429 | Sempre — respeita `Retry-After` real quando presente |
-| HTTP 5xx | Só se a chamada for idempotente (GET, ou POST/DELETE com Idempotency-Key) |
-| HTTP 400/401/403/404/409/422 | **Nunca** — são erros determinísticos, repetir não muda o resultado |
+| Connection failure (reset, connect timeout) | Always |
+| HTTP 429 | Always — respects the real `Retry-After` when present |
+| HTTP 5xx | Only if the call is idempotent (GET, or POST/DELETE with Idempotency-Key) |
+| HTTP 400/401/403/404/409/422 | **Never** — deterministic errors, retrying won't change the result |
 
-## Configuração
+## Configuration
 
 ```java
 var client = IshtaranClient.builder()
         .apiKey(apiKey)
         .environment(Environment.LOCAL)
-        // (retry customizado ainda não exposto no builder público — usar defaults por ora)
+        // (custom retry not yet exposed on the public builder -- use the defaults for now)
         .build();
 ```
 
-Defaults: até 2 tentativas adicionais (3 no total), backoff exponencial com jitter (base 200ms,
-fator 2x, teto 5s). Ver `com.ishtaran.sdk.config.RetryPolicy`.
+Defaults: up to 2 additional attempts (3 total), exponential backoff with jitter (base 200ms,
+factor 2x, cap 5s). See `com.ishtaran.sdk.config.RetryPolicy`.
 
-## Por que 5xx só reintenta com idempotência
+## Why 5xx only retries with idempotency
 
-Um 5xx genuíno pode significar que o servidor processou parcialmente o efeito antes de falhar
-(ex.: debitou saldo mas não confirmou a resposta). Reintentar um `POST` de mutação sem
-Idempotency-Key correria o risco de duplicar o efeito — o SDK nunca faz isso. `GET`s são
-naturalmente seguros para retry (sem efeito colateral).
+A genuine 5xx can mean the server partially processed the effect before failing (e.g. debited a
+balance but didn't confirm the response). Retrying a mutation `POST` without an Idempotency-Key
+would risk duplicating the effect — the SDK never does that. `GET`s are naturally safe to retry
+(no side effect).

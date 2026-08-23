@@ -12,9 +12,9 @@ public final class GradleConsumerSmokeTest {
                 .build();
 
         if (client.ledger() == null) {
-            throw new IllegalStateException("Client mal construído");
+            throw new IllegalStateException("Client badly constructed");
         }
 
-        System.out.println("GRADLE_CONSUMER_SMOKE_TEST: OK — ishtaran-java consumido com sucesso via Gradle (mavenLocal()).");
+        System.out.println("GRADLE_CONSUMER_SMOKE_TEST: OK — ishtaran-java successfully consumed via Gradle (mavenLocal()).");
     }
 }

@@ -10,7 +10,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 
-/** Control Plane — {@code ApiKeys} (2 rotas reais). */
+/** Control Plane — {@code ApiKeys} (2 real routes). */
 public final class ApiKeysResource extends ApiResourceSupport {
 
     public ApiKeysResource(HttpTransport transport) {
@@ -22,8 +22,8 @@ public final class ApiKeysResource extends ApiResourceSupport {
     }
 
     /**
-     * {@code overlapWindow} é enviado no formato real de {@code TimeSpan} do .NET (não ISO-8601) —
-     * ver {@link DotNetTimeSpan}. {@code plainTextKey} da nova chave só aparece nesta resposta.
+     * {@code overlapWindow} is sent in .NET's real {@code TimeSpan} format (not ISO-8601) —
+     * see {@link DotNetTimeSpan}. The new key's {@code plainTextKey} only appears in this response.
      */
     public RotateApiKeyResult rotate(UUID apiKeyId, Duration overlapWindow) {
         var body = toJson(Map.of("overlapWindow", DotNetTimeSpan.format(overlapWindow)));
@@ -35,7 +35,7 @@ public final class ApiKeysResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

@@ -5,8 +5,8 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 /**
- * Espelha {@code Withdrawals.Contracts.Responses.WithdrawalQuoteResponse} exatamente. Nunca esconde
- * a Network Fee — {@code estimatedNetworkFee} é sempre exposta (regra explícita do brief).
+ * Mirrors {@code Withdrawals.Contracts.Responses.WithdrawalQuoteResponse} exactly. Never hides
+ * the Network Fee -- {@code estimatedNetworkFee} is always exposed (explicit rule from the brief).
  */
 public record WithdrawalQuoteResponse(
         UUID accountId,

@@ -8,10 +8,10 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Grupo B (inteiro bruto no JSON — sem JsonStringEnumConverter no backend, ver
- * SDK_CAPABILITY_SPEC.md §11.3). Classe (não {@code enum} Java) para permitir que um valor
- * desconhecido preserve o inteiro bruto exato recebido, em vez de colapsar em uma constante fixa
- * sem informação (§11.4 — forward-compatibility real, não apenas um rótulo "UNKNOWN" genérico).
+ * Group B (raw integer in the JSON — no JsonStringEnumConverter on the backend, see
+ * SDK_CAPABILITY_SPEC.md §11.3). A class (not a Java {@code enum}) so an unknown
+ * value can preserve the exact raw integer received, instead of collapsing into an uninformative
+ * fixed constant (§11.4 — real forward-compatibility, not just a generic "UNKNOWN" label).
  */
 public final class WithdrawalStatus {
 

@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
-/** Data Plane — {@code Ledger} (2 rotas reais, ambas leitura). */
+/** Data Plane — {@code Ledger} (2 real routes, both read-only). */
 public final class LedgerResource extends ApiResourceSupport {
 
     public LedgerResource(HttpTransport transport) {
@@ -25,7 +25,7 @@ public final class LedgerResource extends ApiResourceSupport {
                 BalanceResponse.class);
     }
 
-    /** {@code skip}/{@code take} são paginação real (ver SDK_CAPABILITY_SPEC.md §12.7). */
+    /** {@code skip}/{@code take} are real pagination (see SDK_CAPABILITY_SPEC.md §12.7). */
     public List<LedgerEntryResponse> listEntries(UUID accountId, UUID assetNetworkId, EntryNature nature,
                                                   OffsetDateTime from, OffsetDateTime to, int skip, int take) {
         var query = new StringBuilder("/v1/accounts/" + accountId + "/ledger-entries?assetNetworkId=" + assetNetworkId);
@@ -43,7 +43,7 @@ public final class LedgerResource extends ApiResourceSupport {
         });
     }
 
-    /** Iterador lazy — ver SDK_CAPABILITY_SPEC.md §12.7 e {@link WithdrawalsResource#listAll}. */
+    /** Lazy iterator — see SDK_CAPABILITY_SPEC.md §12.7 and {@link WithdrawalsResource#listAll}. */
     public PageIterator<LedgerEntryResponse> listAllEntries(UUID accountId, UUID assetNetworkId, EntryNature nature,
                                                               OffsetDateTime from, OffsetDateTime to, int pageSize) {
         return new PageIterator<>(pageSize, (skip, take) -> listEntries(accountId, assetNetworkId, nature, from, to, skip, take));

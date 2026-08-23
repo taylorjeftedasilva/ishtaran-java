@@ -1,6 +1,6 @@
-// Prova de consumo real do artefato com.ishtaran:ishtaran-java via Gradle (mavenLocal()) — a
-// segunda metade obrigatória do "package dry run" do brief do SDK Program (o brief exige tanto
-// um consumidor Maven quanto um consumidor Gradle, já que o artefato Maven serve os dois).
+// Real consumption proof for the com.ishtaran:ishtaran-java artifact via Gradle (mavenLocal()) —
+// the mandatory second half of the "package dry run" in the SDK Program brief (the brief requires
+// both a Maven consumer and a Gradle consumer, since the Maven artifact serves both).
 plugins {
     id 'java'
     id 'application'

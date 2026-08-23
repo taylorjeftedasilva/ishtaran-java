@@ -1,10 +1,10 @@
 package com.ishtaran.sdk.error;
 
 /**
- * Base de toda exceção lançada pelo SDK — ver SDK_CAPABILITY_SPEC.md §6.4. {@code httpStatus}/
- * {@code code} são nulos para {@link NetworkError}/{@link TimeoutError} (nenhuma resposta HTTP
- * existiu); {@code code}/{@code details} são sempre nulos para {@link AuthenticationError}/
- * {@link AuthorizationError} (401/403 nunca têm corpo — ver §6.3, Known Gap §12.1).
+ * Base of every exception thrown by the SDK — see SDK_CAPABILITY_SPEC.md §6.4. {@code httpStatus}/
+ * {@code code} are null for {@link NetworkError}/{@link TimeoutError} (no HTTP response ever
+ * existed); {@code code}/{@code details} are always null for {@link AuthenticationError}/
+ * {@link AuthorizationError} (401/403 never have a body — see §6.3, Known Gap §12.1).
  */
 public class IshtaranError extends RuntimeException {
 
@@ -28,15 +28,15 @@ public class IshtaranError extends RuntimeException {
         return httpStatus;
     }
 
-    /** Chave estável de erro de domínio (ex.: {@code VALIDATION_ERROR}) — nulo quando não aplicável. */
+    /** Stable domain error key (e.g. {@code VALIDATION_ERROR}) — null when not applicable. */
     public String code() {
         return code;
     }
 
     /**
-     * Sempre nulo hoje — a API real não implementa nenhum mecanismo de request/correlation ID
-     * (busca exaustiva em src/CompositionRoot/, zero ocorrência — ver SDK_CAPABILITY_SPEC.md
-     * §12.1). Campo mantido para quando esse mecanismo existir no backend, sem breaking change.
+     * Always null today — the real API does not implement any request/correlation ID mechanism
+     * (exhaustive search in src/CompositionRoot/, zero occurrences — see SDK_CAPABILITY_SPEC.md
+     * §12.1). Field kept for when that mechanism exists in the backend, without a breaking change.
      */
     public String requestId() {
         return requestId;

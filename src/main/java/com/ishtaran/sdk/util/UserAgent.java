@@ -1,6 +1,6 @@
 package com.ishtaran.sdk.util;
 
-/** Formato fixo {@code ishtaran-java/<version>} — nunca contém dado pessoal (regra do brief). */
+/** Fixed format {@code ishtaran-java/<version>} -- never contains personal data (rule from the brief). */
 public final class UserAgent {
 
     public static final String SDK_VERSION = "1.0.0-SNAPSHOT";

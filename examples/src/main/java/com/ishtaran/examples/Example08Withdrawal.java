@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.UUID;
 
-/** 08 — Executar um saque via Easy Mode e esperar (com timeout) até um estado terminal. */
+/** 08 — Execute a withdrawal via Easy Mode and wait (with timeout) for a terminal state. */
 public final class Example08Withdrawal {
 
     public static void main(String[] args) {
@@ -24,10 +24,10 @@ public final class Example08Withdrawal {
                 new BigDecimal("50"), "TDestinationAddressReal", null);
 
         System.out.println("withdrawalId=" + withdrawal.withdrawalId());
-        System.out.println("Você recebe " + withdrawal.estimatedRecipientAmount()
-                + " (taxa de rede: " + withdrawal.estimatedNetworkFee() + ")");
+        System.out.println("You receive " + withdrawal.estimatedRecipientAmount()
+                + " (network fee: " + withdrawal.estimatedNetworkFee() + ")");
 
         var finalState = client.withdrawals().waitFor(withdrawal.withdrawalId(), Duration.ofMinutes(15), Duration.ofSeconds(10));
-        System.out.println("Status final: " + finalState.status());
+        System.out.println("Final status: " + finalState.status());
     }
 }

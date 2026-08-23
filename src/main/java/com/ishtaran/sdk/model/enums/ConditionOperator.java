@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Inteiro bruto no JSON — {@code WorkflowRules.Contracts.Enums.ConditionOperator} (enum: [1,2,3]). */
+/** Raw integer in the JSON — {@code WorkflowRules.Contracts.Enums.ConditionOperator} (enum: [1,2,3]). */
 public final class ConditionOperator {
 
     public static final ConditionOperator EQUALS = new ConditionOperator("EQUALS", 1);

@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Ver SDK_CAPABILITY_SPEC.md §11.4 — nenhum enum pode lançar exceção de desserialização para um
- * valor não reconhecido; deve cair em UNKNOWN preservando o valor bruto exato.
+ * See SDK_CAPABILITY_SPEC.md §11.4 — no enum may throw a deserialization exception for an
+ * unrecognized value; it must fall back to UNKNOWN while preserving the exact raw value.
  */
 class EnumForwardCompatibilityTest {
 

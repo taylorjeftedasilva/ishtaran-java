@@ -5,7 +5,7 @@ import com.ishtaran.sdk.config.Environment;
 
 import java.util.UUID;
 
-/** 06 — Liquidar uma Transaction financiada (Settlement) e consultar o resumo. */
+/** 06 — Settle a funded Transaction (Settlement) and query the summary. */
 public final class Example06Settlement {
 
     public static void main(String[] args) {

@@ -1,10 +1,10 @@
 package com.ishtaran.sdk.util;
 
 /**
- * Mascaramento central de segredos para log/toString/mensagens de exceção — nunca o valor bruto.
- * Formato genérico (4 primeiros + **** + 4 últimos): a API Key real do Ishtaran não tem prefixo de
- * ambiente (ApiKeyGenerator.Generate() é Base64 puro de 32 bytes — ver SDK_CAPABILITY_SPEC.md
- * §12.5), então este SDK nunca assume um prefixo tipo {@code sk_live_} que não existe de verdade.
+ * Central secret masking for log/toString/exception messages -- never the raw value.
+ * Generic format (first 4 + **** + last 4): the real Ishtaran API Key has no environment prefix
+ * (ApiKeyGenerator.Generate() is plain 32-byte Base64 -- see SDK_CAPABILITY_SPEC.md section
+ * 12.5), so this SDK never assumes a {@code sk_live_}-style prefix that doesn't really exist.
  */
 public final class Redactor {
 
@@ -21,7 +21,7 @@ public final class Redactor {
         return secret.substring(0, 4) + "****" + secret.substring(secret.length() - 4);
     }
 
-    /** Headers cujo valor nunca deve aparecer em log, mesmo com logging opt-in habilitado. */
+    /** Headers whose value must never appear in a log, even with opt-in logging enabled. */
     public static boolean isSensitiveHeader(String headerName) {
         if (headerName == null) {
             return false;

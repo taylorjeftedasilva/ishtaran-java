@@ -1,38 +1,39 @@
 # Configuration
 
-`IshtaranClientConfig` (construído via `IshtaranClient.builder()`) é a fonte única de configuração
-— nunca dispersa entre resources individuais, nenhum método de negócio aceita override de URL.
+`IshtaranClientConfig` (built via `IshtaranClient.builder()`) is the single source of
+configuration — never scattered across individual resources, no business method accepts a URL
+override.
 
 ```java
 var client = IshtaranClient.builder()
         .apiKey("...")
         .environment(Environment.LOCAL)
-        .baseUrl("http://localhost:8080")       // sempre explícito quando presente, nunca inferido
+        .baseUrl("http://localhost:8080")       // always explicit when present, never inferred
         .connectTimeout(Duration.ofSeconds(5))  // default: 5s
         .requestTimeout(Duration.ofSeconds(30)) // default: 30s
-        .enableLogging(true)                    // opt-in, opt-in mesmo — nunca ligado por padrão
+        .enableLogging(true)                    // opt-in, truly opt-in — never on by default
         .build();
 ```
 
 ## `baseUrl`/`Environment`
 
-| Environment | `baseUrl` default | Precisa `.baseUrl(...)` explícito? |
+| Environment | Default `baseUrl` | Needs explicit `.baseUrl(...)`? |
 |---|---|---|
-| `LOCAL` | `http://localhost:8080` | Não |
-| `SANDBOX` | **nenhum** — infraestrutura real ainda não provisionada | **Sim, obrigatório** |
-| `PRODUCTION` | **nenhum** — idem | **Sim, obrigatório** |
+| `LOCAL` | `http://localhost:8080` | No |
+| `SANDBOX` | **none** — real infrastructure not yet provisioned | **Yes, required** |
+| `PRODUCTION` | **none** — same | **Yes, required** |
 
-Construir o client com `SANDBOX`/`PRODUCTION` sem `baseUrl` explícito lança
-`IllegalStateException` imediatamente (fail-fast) — o SDK nunca aponta silenciosamente para uma URL
-inventada. Quando `Endpoints.SANDBOX`/`PRODUCTION` reais existirem (após `terraform apply` real),
-essa exigência deixa de existir sem quebrar retrocompatibilidade.
+Building the client with `SANDBOX`/`PRODUCTION` without an explicit `baseUrl` throws
+`IllegalStateException` immediately (fail-fast) — the SDK never silently points to a made-up URL.
+Once the real `Endpoints.SANDBOX`/`PRODUCTION` exist (after a real `terraform apply`), this
+requirement goes away without breaking backward compatibility.
 
 ## TLS
 
-TLS obrigatório por padrão, sem switch fácil de desabilitar. A única exceção
-(`allowInsecureTlsForLocalDevelopment`) só tem efeito com `Environment.LOCAL` — combiná-la com
-`SANDBOX`/`PRODUCTION` lança em `build()`.
+TLS is required by default, with no easy switch to disable it. The only exception
+(`allowInsecureTlsForLocalDevelopment`) only takes effect with `Environment.LOCAL` — combining it
+with `SANDBOX`/`PRODUCTION` throws in `build()`.
 
 ## User-Agent
 
-Formato fixo `ishtaran-java/<versão>` — nunca contém dado pessoal, não configurável.
+Fixed format `ishtaran-java/<version>` — never contains personal data, not configurable.

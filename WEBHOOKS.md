@@ -1,8 +1,8 @@
 # Webhooks
 
-## Protocolo real (extraído byte a byte do backend)
+## Real protocol (extracted byte-for-byte from the backend)
 
-Headers enviados em toda entrega: `X-Webhook-Signature` (HMAC-SHA256 hex minúsculo),
+Headers sent on every delivery: `X-Webhook-Signature` (lowercase hex HMAC-SHA256),
 `X-Webhook-Timestamp` (Unix seconds, string), `X-Webhook-Delivery-Id` (GUID).
 
 ```
@@ -10,7 +10,7 @@ signedContent = "{timestamp}.{rawBodyJson}"
 signature     = lowercase_hex(HMAC_SHA256(key = UTF8(endpointSecret), message = UTF8(signedContent)))
 ```
 
-## Verificação (sem chamada HTTP)
+## Verification (no HTTP call)
 
 ```java
 @PostMapping("/webhooks/ishtaran")
@@ -23,31 +23,31 @@ public ResponseEntity<Void> handleWebhook(
     if (!valid) {
         return ResponseEntity.status(401).build();
     }
-    // processar o evento...
+    // process the event...
     return ResponseEntity.ok().build();
 }
 ```
 
-**Use sempre o `rawBody` exatamente como recebido** — nunca o JSON re-serializado pelo seu
-framework. Reserialização pode mudar espaçamento/ordem de campos e quebrar a comparação de
-assinatura, mesmo com o payload semanticamente idêntico.
+**Always use the `rawBody` exactly as received** — never the JSON re-serialized by your
+framework. Re-serialization can change spacing/field order and break the signature comparison,
+even with a semantically identical payload.
 
-## O que a verificação garante
+## What the verification guarantees
 
-- Comparação em **tempo constante** (`MessageDigest.isEqual`, nunca `String.equals`).
-- Validação de `timestamp` contra replay (tolerância padrão de 5 minutos, configurável).
-- Nunca loga o `endpointSecret`.
+- **Constant-time** comparison (`MessageDigest.isEqual`, never `String.equals`).
+- `timestamp` validated against replay (default 5-minute tolerance, configurable).
+- Never logs the `endpointSecret`.
 
-## Configurar/gerenciar endpoints (Core, requer Member JWT)
+## Configuring/managing endpoints (Core, requires Member JWT)
 
 ```java
 var endpoint = client.webhookEndpoints().create(organizationId, "https://myapp.com/webhooks/ishtaran");
-// endpoint.secret() -- guarde AGORA, nunca recuperável depois
+// endpoint.secret() -- save it NOW, never retrievable again later
 
-client.webhookEndpoints().rotateSecret(endpoint.webhookEndpointId()); // novo secret, mesmo invariante
+client.webhookEndpoints().rotateSecret(endpoint.webhookEndpointId()); // new secret, same invariant
 client.webhookEndpoints().deactivate(endpoint.webhookEndpointId());
 ```
 
-Gestão de endpoint hoje só funciona com Member JWT (não aceita API Key — lacuna real da API, ver
-`SDK_CAPABILITY_SPEC.md` §12.4). A verificação de assinatura em si não depende disso — funciona com
-qualquer client, sem autenticação alguma, já que é cálculo local.
+Endpoint management today only works with Member JWT (doesn't accept an API Key — a real API gap,
+see `SDK_CAPABILITY_SPEC.md` §12.4). Signature verification itself doesn't depend on this — it
+works with any client, with no authentication at all, since it's a local calculation.

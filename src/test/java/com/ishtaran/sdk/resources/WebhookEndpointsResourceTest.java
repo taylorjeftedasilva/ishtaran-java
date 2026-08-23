@@ -10,9 +10,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Confirma que o filtro de {@code status} de deliveries vai como NOME (string, case-insensitive) —
- * diferente do filtro de {@code AssetNetworkCatalog} (inteiro). Confirmado em código-fonte real:
- * {@code Enum.Parse<WebhookDeliveryStatus>(status, ignoreCase: true)} em NotificationsEndpoints.cs.
+ * Confirms that the deliveries {@code status} filter goes as a NAME (string, case-insensitive) —
+ * unlike the {@code AssetNetworkCatalog} filter (integer). Confirmed in the real source code:
+ * {@code Enum.Parse<WebhookDeliveryStatus>(status, ignoreCase: true)} in NotificationsEndpoints.cs.
  */
 class WebhookEndpointsResourceTest {
 
@@ -24,7 +24,7 @@ class WebhookEndpointsResourceTest {
         resource.listDeliveries(UUID.randomUUID(), null, WebhookDeliveryStatus.DELIVERED);
 
         var path = fake.received().get(0).path();
-        assertTrue(path.contains("status=DELIVERED"), "esperado nome da string, não '2': " + path);
+        assertTrue(path.contains("status=DELIVERED"), "expected the string name, not '2': " + path);
     }
 
     @Test
@@ -36,7 +36,7 @@ class WebhookEndpointsResourceTest {
 
         var path = fake.received().get(0).path();
         assertTrue(path.contains("eventType=payment.received%26status%3DDELIVERED"),
-                "'&'/'=' no valor devem ser URL-encoded, nunca injetar um segundo parâmetro: " + path);
+                "'&'/'=' in the value must be URL-encoded, never injecting a second parameter: " + path);
     }
 
     @Test

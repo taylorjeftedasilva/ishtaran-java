@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!--
-        Os 11 exemplos numerados exigidos pelo brief do SDK Program (01-auth .. 11-sandbox). Cada
-        um é código real, compilável contra o SDK real (nunca pseudocódigo) — requer uma instância
-        real da API rodando (ISHTARAN_API_KEY / ISHTARAN_BASE_URL) para EXECUTAR, mas compila e é
-        verificado neste módulo sem depender de rede.
+        The 11 numbered examples required by the SDK Program brief (01-auth .. 11-sandbox). Each
+        one is real code, compilable against the real SDK (never pseudocode) — requires a real
+        API instance running (ISHTARAN_API_KEY / ISHTARAN_BASE_URL) to EXECUTE, but compiles and
+        is verified in this module without depending on the network.
     -->
     <groupId>com.ishtaran.examples</groupId>
     <artifactId>ishtaran-java-examples</artifactId>

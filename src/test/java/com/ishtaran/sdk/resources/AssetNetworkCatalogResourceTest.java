@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Confirma que o filtro de {@code status} vai como INTEIRO na query string, per o contrato real do
- * OpenAPI (diferente do filtro de status de Webhook Deliveries, que é string — ver
+ * Confirms that the {@code status} filter goes as an INTEGER in the query string, per the real
+ * OpenAPI contract (unlike the Webhook Deliveries status filter, which is a string — see
  * SDK_CAPABILITY_SPEC.md §11.3/{@link WebhookEndpointsResourceTest}).
  */
 class AssetNetworkCatalogResourceTest {
@@ -21,7 +21,7 @@ class AssetNetworkCatalogResourceTest {
         resource.listAssetNetworks(AssetNetworkStatus.PAUSED);
 
         assertTrue(fake.received().get(0).path().contains("status=2"),
-                "PAUSED deve virar '2' na query string (contrato real: enum: [1,2,3], type: integer)");
+                "PAUSED must become '2' in the query string (real contract: enum: [1,2,3], type: integer)");
     }
 
     @Test

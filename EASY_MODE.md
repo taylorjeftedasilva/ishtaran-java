@@ -1,42 +1,43 @@
 # Easy Mode vs. Core API
 
-Mesmo backend, duas camadas — Easy Mode nunca duplica lógica de negócio, só compõe chamadas Core
-(ver `SDK_CAPABILITY_SPEC.md` §5).
+Same backend, two layers — Easy Mode never duplicates business logic, it only composes Core
+calls (see `SDK_CAPABILITY_SPEC.md` §5).
 
-## Use Easy Mode quando...
+## Use Easy Mode when...
 
-- Você quer integrar rápido sem entender toda a superfície da API (`client.receivePayment(...)`,
-  `client.withdraw(...)`, `client.getBalance(...)`).
-- Você precisa esperar um resultado assíncrono de forma segura (`client.waitForPayment(...)`,
-  `client.withdrawals().waitFor(...)`, `client.transactions().waitFor(...)` — sempre com timeout).
-- Você só precisa verificar uma assinatura de webhook (`client.verifyWebhookSignature(...)`).
+- You want to integrate quickly without understanding the whole API surface
+  (`client.receivePayment(...)`, `client.withdraw(...)`, `client.getBalance(...)`).
+- You need to safely wait for an asynchronous result (`client.waitForPayment(...)`,
+  `client.withdrawals().waitFor(...)`, `client.transactions().waitFor(...)` — always with a
+  timeout).
+- You only need to verify a webhook signature (`client.verifyWebhookSignature(...)`).
 
-## Use Core API quando...
+## Use Core API when...
 
-- Você precisa de controle granular (ex.: reservar saldo separadamente de liquidar —
+- You need granular control (e.g. reserving balance separately from settling —
   `client.transactions().reserve(...)` vs. `client.settlements().executeSettlement(...)`).
-- Você precisa de um recurso que o Easy Mode não cobre (`client.workflows()`, `client.sandbox()`,
-  `client.organizations()`, etc. — 93 operações reais, ver `SDK_FEATURE_MATRIX.md`).
-- Você quer paginar de verdade (`client.withdrawals().listAll(...)`,
-  `client.ledger().listAllEntries(...)`) em vez de uma única chamada.
-- Você está construindo um painel administrativo/dashboard que precisa de todos os campos de uma
-  resposta, não só o resumo que o Easy Mode expõe.
+- You need a resource Easy Mode doesn't cover (`client.workflows()`, `client.sandbox()`,
+  `client.organizations()`, etc. — 93 real operations, see `SDK_FEATURE_MATRIX.md`).
+- You want real pagination (`client.withdrawals().listAll(...)`,
+  `client.ledger().listAllEntries(...)`) instead of a single call.
+- You're building an admin panel/dashboard that needs every field of a response, not just the
+  summary Easy Mode exposes.
 
-## Equivalência concreta
+## Concrete equivalence
 
-| Easy Mode | Core equivalente |
+| Easy Mode | Core equivalent |
 |---|---|
 | `client.receivePayment(orgId, appId, payer, recipient, assetNetworkId, amount)` | `client.transactions().create(...)` + `client.deposits().createPaymentIntent(...)` + `client.deposits().getPaymentIntent(...)` |
 | `client.withdraw(orgId, accountId, assetNetworkId, amount, address, null)` | `client.withdrawals().createDestination(...)` + `client.withdrawals().request(...)` |
 | `client.getBalance(accountId, assetNetworkId)` | `client.ledger().getBalance(accountId, assetNetworkId)` |
-| `client.waitForPayment(...)` | polling manual de `client.transactions().get(...)` + `client.deposits().getPaymentIntent(...)` |
+| `client.waitForPayment(...)` | manual polling of `client.transactions().get(...)` + `client.deposits().getPaymentIntent(...)` |
 
-Easy Mode nunca esconde o `withdrawalId`/`transactionId`/`paymentIntentId` real — todo resultado
-Easy Mode expõe os IDs reais do Core para debugging (regra do brief).
+Easy Mode never hides the real `withdrawalId`/`transactionId`/`paymentIntentId` — every Easy Mode
+result exposes the real Core IDs for debugging (per the brief's rule).
 
-## Network Fee nunca escondida
+## Network Fee is never hidden
 
-`client.withdraw(...)` sempre devolve `estimatedNetworkFee`/`estimatedRecipientAmount`/`status`
-junto do `requestedAmount` — nunca só "sucesso"/"falha". Se você precisa saber a taxa ANTES de
-comprometer o saque, use `client.withdrawals().quote(...)` (Core, leitura pura, nunca reserva
-saldo).
+`client.withdraw(...)` always returns `estimatedNetworkFee`/`estimatedRecipientAmount`/`status`
+along with `requestedAmount` — never just "success"/"failure". If you need to know the fee BEFORE
+committing to a withdrawal, use `client.withdrawals().quote(...)` (Core, pure read, never reserves
+balance).

@@ -8,9 +8,9 @@ import com.ishtaran.sdk.error.TimeoutError;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Decorator de retry — ver SDK_CAPABILITY_SPEC.md §8. Só reintenta: falha de conexão/timeout
- * (sempre), HTTP 429 (sempre, respeitando {@code Retry-After} quando presente), HTTP 5xx (só se
- * {@link HttpRequest#idempotent()}). Nunca reintenta 400/401/403/404/409/422 — são determinísticos.
+ * Retry decorator — see SDK_CAPABILITY_SPEC.md §8. Only retries: connection/timeout failure
+ * (always), HTTP 429 (always, honoring {@code Retry-After} when present), HTTP 5xx (only if
+ * {@link HttpRequest#idempotent()}). Never retries 400/401/403/404/409/422 — those are deterministic.
  */
 public final class RetryingTransport implements HttpTransport {
 
@@ -58,7 +58,7 @@ public final class RetryingTransport implements HttpTransport {
             Thread.sleep(delayMs);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new IshtaranError("Retry interrompido", null, null, null, null, false);
+            throw new IshtaranError("Retry interrupted", null, null, null, null, false);
         }
     }
 

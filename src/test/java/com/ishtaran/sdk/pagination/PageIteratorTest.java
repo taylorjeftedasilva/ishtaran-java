@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/** Ver SDK_CAPABILITY_SPEC.md §12.7 — nunca carrega tudo de uma vez, busca página sob demanda. */
+/** See SDK_CAPABILITY_SPEC.md §12.7 — never loads everything at once, fetches pages on demand. */
 class PageIteratorTest {
 
     @Test
@@ -27,7 +27,7 @@ class PageIteratorTest {
         }
 
         assertEquals(allItems, collected);
-        assertEquals(List.of(0, 10, 20), fetchCalls); // 3 páginas: 10+10+5, nunca busca a 4a
+        assertEquals(List.of(0, 10, 20), fetchCalls); // 3 pages: 10+10+5, never fetches the 4th
     }
 
     @Test
@@ -49,8 +49,8 @@ class PageIteratorTest {
 
     @Test
     void exactPageSizeBoundary_fetchesOneExtraEmptyPage_thenStops() {
-        // 10 items, pageSize 10: a primeira página vem cheia (size==pageSize), então o iterador
-        // não sabe ainda que acabou -- busca a próxima e recebe vazia.
+        // 10 items, pageSize 10: the first page comes back full (size==pageSize), so the iterator
+        // doesn't yet know it's finished -- it fetches the next one and gets an empty page back.
         List<Integer> allItems = IntStream.range(0, 10).boxed().toList();
         var fetchCalls = new ArrayList<Integer>();
         var pageIterator = new PageIterator<Integer>(10, (skip, take) -> {

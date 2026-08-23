@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Ver SDK_CAPABILITY_SPEC.md §14 — opt-in, nunca loga Authorization/X-Api-Key em texto puro. */
+/** See SDK_CAPABILITY_SPEC.md §14 — opt-in, never logs Authorization/X-Api-Key in plain text. */
 class LoggingTransportTest {
 
     @Test
@@ -43,6 +43,6 @@ class LoggingTransportTest {
         assertFalse(rendered.contains("supersecretapikeyvalue1234567890"));
         assertFalse(rendered.contains("supersecretjwttoken1234567890"));
         assertTrue(rendered.contains("****"));
-        assertTrue(rendered.contains("ishtaran-java/1.0.0"), "headers não-sensíveis continuam visíveis");
+        assertTrue(rendered.contains("ishtaran-java/1.0.0"), "non-sensitive headers remain visible");
     }
 }

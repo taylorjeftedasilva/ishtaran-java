@@ -7,7 +7,7 @@ import com.ishtaran.sdk.model.dataplane.WebhookDeliveryResponse;
 
 import java.util.UUID;
 
-/** Control Plane (gestão) — {@code WebhookDeliveries} (2 rotas reais, mesmo módulo {@code Notifications}). */
+/** Control Plane (management) — {@code WebhookDeliveries} (2 real routes, same {@code Notifications} module). */
 public final class WebhookDeliveriesResource extends ApiResourceSupport {
 
     public WebhookDeliveriesResource(HttpTransport transport) {

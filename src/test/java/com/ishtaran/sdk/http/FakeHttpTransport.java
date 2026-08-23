@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Transporte em memória, sem rede — usado por todo teste de {@code resources/*}/retry/erro. Existe
- * exatamente para cumprir o requisito do brief de uma abstração de HTTP testável sem rede real.
+ * In-memory transport, no network — used by every {@code resources/*}/retry/error test. Exists
+ * exactly to satisfy the brief's requirement of an HTTP abstraction testable without a real network.
  */
 public final class FakeHttpTransport implements HttpTransport {
 
@@ -44,7 +44,7 @@ public final class FakeHttpTransport implements HttpTransport {
         if (defaultResponder != null) {
             return defaultResponder.apply(request);
         }
-        throw new IllegalStateException("Nenhuma resposta configurada em FakeHttpTransport");
+        throw new IllegalStateException("No response configured in FakeHttpTransport");
     }
 
     public List<HttpRequest> received() {

@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
- * 07 — Cotar um saque ANTES de comprometer o valor (leitura pura, nunca reserva saldo). Sempre
- * expõe a Network Fee real, nunca esconde.
+ * 07 — Quote a withdrawal BEFORE committing the amount (pure read, never reserves balance).
+ * Always exposes the real Network Fee, never hides it.
  */
 public final class Example07WithdrawalQuote {
 

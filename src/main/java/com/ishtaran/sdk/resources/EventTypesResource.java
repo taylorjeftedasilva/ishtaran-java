@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/** Data Plane — {@code EventTypes} (2 rotas reais, mesmo módulo {@code WorkflowRules}). */
+/** Data Plane — {@code EventTypes} (2 real routes, same {@code WorkflowRules} module). */
 public final class EventTypesResource extends ApiResourceSupport {
 
     public EventTypesResource(HttpTransport transport) {
@@ -34,7 +34,7 @@ public final class EventTypesResource extends ApiResourceSupport {
         try {
             return JsonCodec.mapper().writeValueAsString(value);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao serializar corpo de requisição", e);
+            throw new IllegalStateException("Failed to serialize request body", e);
         }
     }
 }

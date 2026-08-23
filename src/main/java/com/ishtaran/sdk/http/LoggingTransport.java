@@ -5,11 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Logging opt-in (só ativo quando {@code IshtaranClientConfig.enableLogging(true)}) — nunca loga
- * {@code Authorization}/{@code X-Api-Key} em texto puro (redação central via {@link Redactor}),
- * nunca loga o corpo bruto (pode conter secret de webhook/API Key na resposta de criação — só
- * método/path/status/duração). Fachada SLF4J — sem implementação obrigatória, o consumidor escolhe
- * o backend de log.
+ * Opt-in logging (only active when {@code IshtaranClientConfig.enableLogging(true)}) — never logs
+ * {@code Authorization}/{@code X-Api-Key} in plain text (central redaction via {@link Redactor}),
+ * never logs the raw body (may contain a webhook secret/API Key in a creation response — only
+ * method/path/status/duration). SLF4J facade — no mandatory implementation, the consumer chooses
+ * the log backend.
  */
 public final class LoggingTransport implements HttpTransport {
 
@@ -37,7 +37,7 @@ public final class LoggingTransport implements HttpTransport {
         }
     }
 
-    /** Package-private (não {@code private}) só para permitir teste direto da redação, sem reflection. */
+    /** Package-private (not {@code private}) only to allow direct testing of redaction, without reflection. */
     String redactedHeaders(HttpRequest request) {
         var sb = new StringBuilder("{");
         request.headers().forEach((name, value) -> {

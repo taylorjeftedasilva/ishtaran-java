@@ -11,10 +11,10 @@ import java.net.http.HttpTimeoutException;
 import java.time.Duration;
 
 /**
- * Única implementação real de {@link HttpTransport} — sobre {@code java.net.http} (JDK, zero
- * dependência de terceiros para transporte). TLS verificado por padrão; nunca desabilitado a menos
- * que {@link IshtaranClientConfig#allowInsecureTlsForLocalDevelopment()} esteja ativo (que já é
- * recusado no {@code build()} para qualquer Environment que não seja LOCAL).
+ * The only real implementation of {@link HttpTransport} — on top of {@code java.net.http} (JDK, zero
+ * third-party dependency for transport). TLS verified by default; never disabled unless
+ * {@link IshtaranClientConfig#allowInsecureTlsForLocalDevelopment()} is active (which is already
+ * rejected in {@code build()} for any Environment other than LOCAL).
  */
 public final class JdkHttpTransport implements HttpTransport {
 
@@ -62,12 +62,12 @@ public final class JdkHttpTransport implements HttpTransport {
             var response = client.send(builder.build(), java.net.http.HttpResponse.BodyHandlers.ofString());
             return new HttpResponse(response.statusCode(), response.headers().map(), response.body());
         } catch (HttpTimeoutException e) {
-            throw new TimeoutError("Timeout ao chamar " + request.method() + " " + request.path(), e);
+            throw new TimeoutError("Timeout calling " + request.method() + " " + request.path(), e);
         } catch (IOException e) {
-            throw new NetworkError("Falha de rede ao chamar " + request.method() + " " + request.path(), e);
+            throw new NetworkError("Network failure calling " + request.method() + " " + request.path(), e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new NetworkError("Chamada interrompida: " + request.method() + " " + request.path(), e);
+            throw new NetworkError("Call interrupted: " + request.method() + " " + request.path(), e);
         }
     }
 }

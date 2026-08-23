@@ -8,9 +8,9 @@ import com.ishtaran.sdk.http.HttpTransport;
 import com.ishtaran.sdk.serialization.JsonCodec;
 
 /**
- * Base comum de todo {@code *Resource} — execução de request + desserialização + mapeamento de erro
- * centralizados, para nenhum resource duplicar essa lógica (mesmo espírito de
- * {@code ErrorMapper}/{@code JsonCodec} únicos).
+ * Common base for every {@code *Resource} — centralized request execution + deserialization +
+ * error mapping, so no resource duplicates this logic (same spirit as the single
+ * {@code ErrorMapper}/{@code JsonCodec}).
  */
 public abstract class ApiResourceSupport {
 
@@ -47,7 +47,7 @@ public abstract class ApiResourceSupport {
         try {
             return JsonCodec.mapper().readValue(response.body(), type);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao desserializar resposta real da API: " + e.getMessage(), e);
+            throw new IllegalStateException("Failed to deserialize real API response: " + e.getMessage(), e);
         }
     }
 
@@ -61,7 +61,7 @@ public abstract class ApiResourceSupport {
         try {
             return JsonCodec.mapper().readValue(response.body(), type);
         } catch (Exception e) {
-            throw new IllegalStateException("Falha ao desserializar resposta real da API: " + e.getMessage(), e);
+            throw new IllegalStateException("Failed to deserialize real API response: " + e.getMessage(), e);
         }
     }
 }
