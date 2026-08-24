@@ -115,31 +115,25 @@ This is deliberately not a full reference — see [FEATURES.md](FEATURES.md) and
 
 ## Installation
 
-Not yet published on Maven Central — package registry distribution is planned alongside the
-public Sandbox launch (see [Package distribution roadmap](#package-distribution-roadmap)). The
-source is public today; clone and install into your local Maven repository:
-
-```bash
-git clone https://github.com/taylorjeftedasilva/ishtaran-java.git
-cd ishtaran-java
-mvn install
-```
-
 ```xml
 <dependency>
     <groupId>com.ishtaran</groupId>
     <artifactId>ishtaran-java</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
-Or Gradle (`mavenLocal()`):
+Or Gradle:
 
 ```groovy
 dependencies {
-    implementation 'com.ishtaran:ishtaran-java:1.0.0-SNAPSHOT'
+    implementation 'com.ishtaran:ishtaran-java:0.1.0'
 }
 ```
+
+`0.1.0` is a real, published **Development Preview** release on Maven Central -- verified live
+with a real `mvn dependency:get` from a clean local repository. See
+[CHANGELOG.md](CHANGELOG.md) for what's in it.
 
 Requires **Java 17+**.
 
@@ -213,10 +207,10 @@ for the complete real contract.
 
 ## Package distribution roadmap
 
-Not yet published on a package registry. Alongside the public Sandbox launch, the plan is to
-distribute this SDK through Maven Central (or another standard Maven-compatible repository).
-Until then, build/install directly from this source repository — see
-[Installation](#installation) above.
+`0.1.0` (Development Preview) is published on Maven Central — see [Installation](#installation).
+Future releases follow the same path: a reviewed, tested commit gets a new semver tag, GPG-signed
+artifacts are staged via the Central Publisher Portal, and the repository owner does the final
+manual publish click in the Portal.
 
 ## License
 

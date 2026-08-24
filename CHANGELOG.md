@@ -1,7 +1,29 @@
 # Changelog
 
-Follows [SemVer](https://semver.org/). Not yet published (Maven Central) — versions below reflect
-the state of local development.
+Follows [SemVer](https://semver.org/). This is a **Development Preview** — 0.x versions may
+still change before a stable 1.0.0.
+
+## [0.1.0] — 2026-08-24
+
+First public release, published on Maven Central (`com.ishtaran:ishtaran-java:0.1.0`). Builds on
+the `1.0.0-SNAPSHOT` work below, plus:
+
+### Added since `1.0.0-SNAPSHOT`
+
+- Self-custody wallet generation and restoration (`WalletFactory.generate`/`restore`,
+  BIP39/BIP32/BIP44).
+- Tron address derivation from the public account key only (`TronAddress.derive`).
+- Local canonical-hash signing (`InMemorySigner`), documented as unsafe for Production —
+  implement your own `Signer` against a Vault/KMS/HSM for any real deployment.
+- `client.wallets()`/`client.signingRequests()` — the real `ExecutionCustody` HTTP routes end to
+  end.
+- `client.accountHolders()` — self-service for the financial holder's global identity.
+- License: Apache License 2.0.
+
+### Known, still pending
+
+- The public Sandbox is not live yet.
+- Production blockchain execution is not available yet.
 
 ## [1.0.0-SNAPSHOT] — 2026-08-17
 
