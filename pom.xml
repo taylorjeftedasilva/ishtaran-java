@@ -173,7 +173,10 @@
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.7.0</version>
+                        <!-- 0.7.0 crashes deserializing the Central Portal API's deployment status
+                             response once it started returning a "warnings" field the old client
+                             didn't know about (UnrecognizedPropertyException). 0.11.0 is current. -->
+                        <version>0.11.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
