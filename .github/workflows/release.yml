@@ -1,0 +1,82 @@
+name: Release
+
+# Triggered only by a protected version tag (never a pull request, never a
+# branch push) -- pushing a `v*` tag requires write access to this repository,
+# so a fork/PR can never trigger a publish. Least privilege: `test` only
+# reads the repo; `publish` is the only job that touches secrets, and runs
+# behind the `maven-central-release` environment, which the repository owner
+# can gate with required reviewers in Settings -> Environments.
+#
+# Requires, as repository/environment secrets (all owner-provided, none of
+# them generated or held by this session -- see the release report):
+#   CENTRAL_PORTAL_USERNAME / CENTRAL_PORTAL_PASSWORD -- a Central Publisher
+#     Portal user token (not a long-lived account password), created after
+#     the com.ishtaran (or io.github.<user>) namespace is verified.
+#   GPG_PRIVATE_KEY / GPG_PASSPHRASE -- required by Maven Central for every
+#     artifact; generate once, keep the public key on a keyserver.
+# autoPublish is false in the release profile (pom.xml) on purpose -- this
+# workflow stages the release in the Central Portal; a human still reviews
+# and clicks "Publish" there for the first release.
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - run: mvn -B test
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: maven-central-release
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          server-id: central
+          server-username: CENTRAL_PORTAL_USERNAME
+          server-password: CENTRAL_PORTAL_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
+        env:
+          CENTRAL_PORTAL_USERNAME: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
+          CENTRAL_PORTAL_PASSWORD: ${{ secrets.CENTRAL_PORTAL_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      # Fails the job if the tag and pom.xml version ever drift -- never
+      # publish a version that doesn't match what was tagged/reviewed.
+      - name: Verify tag matches pom.xml version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          POM_VERSION="$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)"
+          if [ "$TAG_VERSION" != "$POM_VERSION" ]; then
+            echo "Tag v$TAG_VERSION does not match pom.xml version $POM_VERSION"
+            exit 1
+          fi
+        env:
+          CENTRAL_PORTAL_USERNAME: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
+          CENTRAL_PORTAL_PASSWORD: ${{ secrets.CENTRAL_PORTAL_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Deploy to Maven Central (staged, manual publish in the Portal)
+        run: mvn -B -Prelease deploy
+        env:
+          CENTRAL_PORTAL_USERNAME: ${{ secrets.CENTRAL_PORTAL_USERNAME }}
+          CENTRAL_PORTAL_PASSWORD: ${{ secrets.CENTRAL_PORTAL_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
