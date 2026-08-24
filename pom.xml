@@ -6,7 +6,7 @@
 
     <groupId>com.ishtaran</groupId>
     <artifactId>ishtaran-java</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <packaging>jar</packaging>
 
     <name>Ishtaran Java SDK</name>
@@ -20,6 +20,14 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <!-- Required by Maven Central for a valid release POM. -->
+    <developers>
+        <developer>
+            <name>Ishtaran</name>
+            <url>https://ishtaran.com</url>
+        </developer>
+    </developers>
 
     <scm>
         <url>https://github.com/taylorjeftedasilva/ishtaran-java</url>
@@ -133,9 +141,49 @@
     </build>
 
     <!--
-        Real publication (Maven Central via the Central Publishing Portal, GPG signing) is kept
-        prepared but NEVER executed without explicit user authorization — see
-        JAVA_SDK_IMPLEMENTATION_PLAN.md §11 and the corresponding rule in the SDK Program brief.
-        Release <distributionManagement>/<profiles> are left for when that authorization exists.
+        Release publication to Maven Central (Central Publisher Portal + GPG signing) lives in
+        this opt-in profile, never in the default build: `mvn test`/`mvn install` never touch
+        signing or the Portal. Only .github/workflows/release.yml activates it (`-Prelease`), and
+        only on a protected version tag. `central-publishing-maven-plugin`'s `publishingServerId`
+        (central) refers to a server entry in ~/.m2/settings.xml, populated in CI from
+        CENTRAL_PORTAL_USERNAME/CENTRAL_PORTAL_PASSWORD (a Central Portal user token, not a
+        long-lived account password), never committed here. GPG signing needs
+        GPG_PRIVATE_KEY/GPG_PASSPHRASE, generated and held by the repository owner, never by this
+        session; see the release report for exact setup steps.
     -->
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.7</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.7.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
+                            <!-- Reviewed manually in the Central Portal before the first real
+                                 release; safe default once the process is trusted. -->
+                            <autoPublish>false</autoPublish>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
