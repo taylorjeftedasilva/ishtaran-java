@@ -20,13 +20,14 @@ var client = IshtaranClient.builder()
 | Environment | Default `baseUrl` | Needs explicit `.baseUrl(...)`? |
 |---|---|---|
 | `LOCAL` | `http://localhost:8080` | No |
-| `SANDBOX` | **none** — real infrastructure not yet provisioned | **Yes, required** |
-| `PRODUCTION` | **none** — same | **Yes, required** |
+| `SANDBOX` | `https://sandbox-api.ishtaran.com` (the real, live public Sandbox) | No |
+| `PRODUCTION` | **none** — real infrastructure not yet provisioned | **Yes, required** |
 
-Building the client with `SANDBOX`/`PRODUCTION` without an explicit `baseUrl` throws
+Building the client with `PRODUCTION` without an explicit `baseUrl` throws
 `IllegalStateException` immediately (fail-fast) — the SDK never silently points to a made-up URL.
-Once the real `Endpoints.SANDBOX`/`PRODUCTION` exist (after a real `terraform apply`), this
-requirement goes away without breaking backward compatibility.
+An explicit `.baseUrl(...)` always overrides the `SANDBOX` default too. Once real
+`Endpoints.PRODUCTION` exists (after a real `terraform apply`), the same requirement goes away
+for `PRODUCTION` without breaking backward compatibility.
 
 ## TLS
 

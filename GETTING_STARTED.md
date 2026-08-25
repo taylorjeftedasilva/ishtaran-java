@@ -6,7 +6,7 @@
 <dependency>
     <groupId>com.ishtaran</groupId>
     <artifactId>ishtaran-java</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
@@ -18,13 +18,14 @@ import com.ishtaran.sdk.config.Environment;
 
 var client = IshtaranClient.builder()
         .apiKey(System.getenv("ISHTARAN_API_KEY"))
-        .environment(Environment.LOCAL)
+        .environment(Environment.SANDBOX)
         .build();
 ```
 
-`Environment.SANDBOX`/`PRODUCTION` don't yet have a known real URL (infrastructure not
-provisioned — see [`CONFIGURATION.md`](CONFIGURATION.md)); use `.baseUrl(...)` explicitly when
-pointing to one of those environments.
+`Environment.SANDBOX` resolves to the real public Sandbox automatically — no `.baseUrl(...)`
+needed. `Environment.PRODUCTION` doesn't yet have a known real URL (infrastructure not
+provisioned — see [`CONFIGURATION.md`](CONFIGURATION.md)); use `.baseUrl(...)` explicitly if you
+ever need to point at a self-hosted Local/other instance.
 
 ## 3. Check a balance (Easy Mode)
 

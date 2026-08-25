@@ -16,9 +16,9 @@ class IshtaranClientConfigTest {
     }
 
     @Test
-    void environmentSandbox_withoutExplicitBaseUrl_throwsInsteadOfGuessingDns() {
-        var builder = IshtaranClientConfig.builder().environment(Environment.SANDBOX);
-        assertThrows(IllegalStateException.class, builder::build);
+    void environmentSandbox_withoutExplicitBaseUrl_resolvesToRealSandboxDefault() {
+        var config = IshtaranClientConfig.builder().environment(Environment.SANDBOX).build();
+        assertEquals(Endpoints.SANDBOX, config.baseUrl());
     }
 
     @Test
