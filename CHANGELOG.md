@@ -3,18 +3,16 @@
 Follows [SemVer](https://semver.org/). This is a **Development Preview** — 0.x versions may
 still change before a stable 1.0.0.
 
-## [Unreleased]
+## [0.1.1] — 2026-08-25
 
 - `Environment.SANDBOX` now resolves to the real public Sandbox (`https://sandbox-api.ishtaran.com`,
   the canonical domain live since 2026-08-25 — Cloud Run Domain Mapping) by default — no explicit
   `.baseUrl(...)` needed, though one always overrides it. Previously it required an explicit
   `.baseUrl(...)` and threw `IllegalStateException` otherwise. `Environment.PRODUCTION` is
-  unchanged (still requires an explicit `.baseUrl(...)`). Backward compatible — not yet published
-  to Maven Central.
+  unchanged (still requires an explicit `.baseUrl(...)`). Backward compatible.
 - Fixed: `UserAgent.SDK_VERSION` (sent as `ishtaran-java/<version>` on every request) was still
   hardcoded to the pre-release placeholder `1.0.0-SNAPSHOT`, misreporting the actual published
-  version. Now `0.1.0`, matching `pom.xml` and the Maven Central release. Not yet published to
-  Maven Central.
+  version. Now `0.1.1`, matching `pom.xml`.
 
 ## [0.1.0] — 2026-08-24
 
