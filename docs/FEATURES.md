@@ -1,4 +1,4 @@
-# Features Olá
+# Features
 
 Derived from the real API contract (see the [API Reference](https://ishtaran.com/docs/api/ishtaran-api)). Core API: 100/100 real
 operations (16/16 modules). Easy Mode: 100% (`receivePayment`, `withdraw`, `getBalance`,
@@ -15,5 +15,5 @@ policy), differing only in each language's idiom (`client.withdrawals().quote(..
 
 Both shipped and at parity across all 4 languages: `client.wallets()`/`client.signingRequests()`
 (local wallet generation/restoration, canonical-hash signing, `SigningRequest` submission — see
-[README.md § Self-custody](README.md#self-custody)) and `client.accountHolders()` (global
-financial identity, `DEC-032` — see [README.md § What this SDK does](README.md#what-this-sdk-does)).
+[README.md § Self-custody](../README.md#self-custody)) and `client.accountHolders()` (global
+financial identity, `DEC-032` — see [README.md § What this SDK does](../README.md#what-this-sdk-does)).

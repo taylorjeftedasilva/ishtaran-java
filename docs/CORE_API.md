@@ -38,13 +38,13 @@ the SDK, see `SDK_CAPABILITY_SPEC.md` §1).
 `me`/`claimInvitation`/`signUpAndClaimInvitation`. Its session token is never shared with
 `client.auth()` (Member) nor with the Organization's `X-Api-Key` on the same client instance —
 treat it as a third, independent authentication context. See [README.md § Self-custody /
-AccountHolders](README.md#what-this-sdk-does) for the identity model.
+AccountHolders](../README.md#what-this-sdk-does) for the identity model.
 
 ## Self-custody (`ExecutionCustody`)
 
 `client.wallets()` / `client.signingRequests()` — wallet registration, deposit address
 allocation, `SigningRequest` creation/submission. Covered with a full worked example in
-[README.md § Self-custody](README.md#self-custody) rather than duplicated here — the interesting
+[README.md § Self-custody](../README.md#self-custody) rather than duplicated here — the interesting
 part of this module is the local signing flow, not the HTTP resource shape.
 
 ## Example — full flow without Easy Mode
@@ -68,7 +68,7 @@ var fullIntent = client.deposits().getPaymentIntent(intent.paymentIntentId());
 var settlement = client.settlements().executeSettlement(txn.transactionId(), null);
 ```
 
-See [`examples/Example14MarketplaceJourney.java`](examples/src/main/java/com/ishtaran/examples/Example14MarketplaceJourney.java)
+See [`examples/Example14MarketplaceJourney.java`](../examples/src/main/java/com/ishtaran/examples/Example14MarketplaceJourney.java)
 for this same flow run in full, including the Payment Intent → deposit → confirmation → self-custody
 payout signing that this snippet omits.
 

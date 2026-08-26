@@ -108,7 +108,7 @@ for the full runnable flow, and
 - Self-custody: wallet generation/restore, public address derivation, `SigningRequest`
   validation, local signing, signed transaction submission
 
-This is deliberately not a full reference — see [FEATURES.md](FEATURES.md) and the
+This is deliberately not a full reference — see [FEATURES.md](docs/FEATURES.md) and the
 [API Reference](https://ishtaran.com/docs/api/ishtaran-api) for details.
 
 ## Installation
@@ -140,14 +140,14 @@ Requires **Java 17+**.
 ```java
 var client = IshtaranClient.builder()
         .apiKey(System.getenv("ISHTARAN_API_KEY"))
-        .environment(Environment.SANDBOX) // resolves to the real public Sandbox; LOCAL/PRODUCTION also available — see CONFIGURATION.md
+        .environment(Environment.SANDBOX) // resolves to the real public Sandbox; LOCAL/PRODUCTION also available — see docs/CONFIGURATION.md
         .build();
 
 var balance = client.getBalance(accountId, assetNetworkId);
 System.out.println("Available: " + balance.available());
 ```
 
-See [`GETTING_STARTED.md`](GETTING_STARTED.md) and [`examples/`](examples/) for the complete flow.
+See [`GETTING_STARTED.md`](docs/GETTING_STARTED.md) and [`examples/`](examples/) for the complete flow.
 
 ## Sandbox
 
@@ -180,23 +180,23 @@ them should be read as available in Production today.
 - Verify the expected destination, asset, amount, and signing context before signing.
 - Treat any integration, tool, or request asking you to upload private key material as invalid.
 
-See [SECURITY.md](SECURITY.md) for more detail.
+See [SECURITY.md](docs/SECURITY.md) for more detail.
 
 ## Documentation
 
 | Document | Content |
 |---|---|
-| [GETTING_STARTED.md](GETTING_STARTED.md) | First use, step by step |
-| [AUTHENTICATION.md](AUTHENTICATION.md) | `X-Api-Key` vs. Member JWT |
-| [EASY_MODE.md](EASY_MODE.md) | When to use Easy Mode vs. Core |
-| [CORE_API.md](CORE_API.md) | Complete resource coverage |
-| [ERROR_HANDLING.md](ERROR_HANDLING.md) | `IshtaranError` hierarchy |
-| [IDEMPOTENCY.md](IDEMPOTENCY.md) | Automatic vs. explicit key |
-| [RETRIES.md](RETRIES.md) | Retry policy |
-| [WEBHOOKS.md](WEBHOOKS.md) | Signature verification |
-| [CONFIGURATION.md](CONFIGURATION.md) | `IshtaranClientConfig` |
-| [SECURITY.md](SECURITY.md) | Secrets, TLS, redaction |
-| [FEATURES.md](FEATURES.md) | Capability coverage |
+| [GETTING_STARTED.md](docs/GETTING_STARTED.md) | First use, step by step |
+| [AUTHENTICATION.md](docs/AUTHENTICATION.md) | `X-Api-Key` vs. Member JWT |
+| [EASY_MODE.md](docs/EASY_MODE.md) | When to use Easy Mode vs. Core |
+| [CORE_API.md](docs/CORE_API.md) | Complete resource coverage |
+| [ERROR_HANDLING.md](docs/ERROR_HANDLING.md) | `IshtaranError` hierarchy |
+| [IDEMPOTENCY.md](docs/IDEMPOTENCY.md) | Automatic vs. explicit key |
+| [RETRIES.md](docs/RETRIES.md) | Retry policy |
+| [WEBHOOKS.md](docs/WEBHOOKS.md) | Signature verification |
+| [CONFIGURATION.md](docs/CONFIGURATION.md) | `IshtaranClientConfig` |
+| [SECURITY.md](docs/SECURITY.md) | Secrets, TLS, redaction |
+| [FEATURES.md](docs/FEATURES.md) | Capability coverage |
 | [CHANGELOG.md](CHANGELOG.md) | Version history |
 
 Every behavior of this SDK is extracted from the real API and from the backend's source code
