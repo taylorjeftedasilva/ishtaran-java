@@ -1,24 +1,19 @@
 # Features
 
-Derived from the real API contract (see the [API Reference](https://ishtaran.com/docs/api/ishtaran-api)),
-the same source of truth shared across the 4 languages.
+Derived from the real API contract (see the [API Reference](https://ishtaran.com/docs/api/ishtaran-api)). Core API: 100/100 real
+operations (16/16 modules). Easy Mode: 100% (`receivePayment`, `withdraw`, `getBalance`,
+`verifyWebhookSignature`). Cross-cutting: 100% (config, auth, errors, retry, idempotency,
+pagination, forward-compatible enums, security/redaction, opt-in logging, safe `waitFor`,
+validated Maven Central packaging).
 
-## Status (2026-08-17)
+Java is the **reference implementation** — TypeScript, Python, and Go match it with 100%
+functional parity (same business-concept names, same defaults, same retry/idempotency/timeout
+policy), differing only in each language's idiom (`client.withdrawals().quote(...)` in Java vs.
+`client.withdrawals.quote(...)` in TypeScript/Python/Go).
 
-114 of 119 tracked capabilities `DONE` for Java. The 5 remaining:
+## Self-custody and AccountHolders
 
-| Capability | Status |
-|---|---|
-| `examples/` (11 numbered examples) | In progress this session |
-| Complete documentation | Completed this session (this file is part of it) |
-| `SECURITY_REVIEW.md` | In progress this session |
-
-Core API: **93/93 real operations implemented** (16 of 16 modules in scope). Easy Mode: 100%
-(`payments.*`, `withdraw`, `getBalance`, `verifyWebhookSignature`). Cross-cutting: 100% (config,
-auth, errors, retry, idempotency, pagination, forward-compatible enums, security/redaction,
-opt-in logging, safe waitFor, validated packaging).
-
-## Parity with other languages
-
-TypeScript/Python/Go haven't started yet — `SDK_FEATURE_MATRIX.md` marks `BLOCKED` for the 3, per
-the SDK Program brief's non-negotiable rule (no language starts before Java closes with `PASS`).
+Both shipped and at parity across all 4 languages: `client.wallets()`/`client.signingRequests()`
+(local wallet generation/restoration, canonical-hash signing, `SigningRequest` submission — see
+[README.md § Self-custody](README.md#self-custody)) and `client.accountHolders()` (global
+financial identity, `DEC-032` — see [README.md § What this SDK does](README.md#what-this-sdk-does)).
