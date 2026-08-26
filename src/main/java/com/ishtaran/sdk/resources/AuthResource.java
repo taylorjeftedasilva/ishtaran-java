@@ -3,6 +3,7 @@ package com.ishtaran.sdk.resources;
 import com.ishtaran.sdk.auth.BearerTokenHolder;
 import com.ishtaran.sdk.http.HttpRequest;
 import com.ishtaran.sdk.http.HttpTransport;
+import com.ishtaran.sdk.idempotency.IdempotencyKeyGenerator;
 import com.ishtaran.sdk.model.controlplane.SignUpResponse;
 import com.ishtaran.sdk.model.controlplane.TokenResult;
 import com.ishtaran.sdk.serialization.JsonCodec;
@@ -33,8 +34,19 @@ public final class AuthResource extends ApiResourceSupport {
     }
 
     public SignUpResponse signUp(String organizationName, String email, String password) {
+        return signUp(organizationName, email, password, null);
+    }
+
+    /**
+     * {@code POST /v1/auth/signup} requires an {@code Idempotency-Key} header (400
+     * {@code IDEMPOTENCY_KEY_REQUIRED} otherwise, real backend behavior -- {@code
+     * CompositionRoot.EndpointMapping.SignUpEndpoints}). Auto-generated when {@code idempotencyKey}
+     * is null, same convention as {@code OrganizationsResource.create}.
+     */
+    public SignUpResponse signUp(String organizationName, String email, String password, String idempotencyKey) {
         var body = toJson(Map.of("organizationName", organizationName, "email", email, "password", password));
-        var result = execute(HttpRequest.post("/v1/auth/signup", body, false), SignUpResponse.class);
+        var result = execute(HttpRequest.post("/v1/auth/signup", body, false)
+                .header("Idempotency-Key", IdempotencyKeyGenerator.resolve(idempotencyKey)), SignUpResponse.class);
         if (result != null && result.token() != null && result.token().success() && result.token().accessToken() != null) {
             bearerTokenHolder.set(result.token().accessToken());
         }

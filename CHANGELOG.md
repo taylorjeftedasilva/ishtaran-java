@@ -3,6 +3,27 @@
 Follows [SemVer](https://semver.org/). This is a **Development Preview** — 0.x versions may
 still change before a stable 1.0.0.
 
+## [0.1.2] — 2026-08-25
+
+- Fixed a real bug, found while building example 14: `AuthResource.signUp(...)` never sent the
+  `Idempotency-Key` header `POST /v1/auth/signup` requires — every real call failed with `400
+  IDEMPOTENCY_KEY_REQUIRED`. Self-service onboarding via this SDK never actually worked before
+  this fix. New overload `signUp(organizationName, email, password, idempotencyKey)`; the existing
+  3-arg overload now auto-generates one, same convention as `OrganizationsResource.create`. No
+  breaking change.
+- Added `examples/Example14MarketplaceJourney.java`: a full marketplace payment, verified live
+  against the real Sandbox (self-service signup, a self-custody execution wallet, a seller
+  `AccountHolder`, a buyer Payment Intent, and a locally signed payout) -- connects several
+  existing examples into one closed cycle.
+- Fixed `examples/pom.xml` and `samples/maven-consumer/pom.xml`, both still pinned to the
+  pre-rename `1.0.0-SNAPSHOT` -- silently building against a stale cached local install instead of
+  the current source. Now `0.1.2`.
+- `CORE_API.md` corrected: documents `AccountHolders`/self-custody resources it omitted, notes
+  that `accounts().authorizeApplication`/`freeze`/`unfreeze`/`close`/`revokeRelationship` reject
+  an API Key and require a Member session (found live, undocumented until now), and that a
+  Transaction reserves itself automatically once its deposit is confirmed -- no `reserve()` call
+  needed or valid in that path.
+
 ## [0.1.1] — 2026-08-25
 
 - `Environment.SANDBOX` now resolves to the real public Sandbox (`https://sandbox-api.ishtaran.com`,

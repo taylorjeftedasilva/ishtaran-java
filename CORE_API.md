@@ -22,7 +22,7 @@ the SDK, see `SDK_CAPABILITY_SPEC.md` §1).
 
 | Resource | Access method |
 |---|---|
-| Accounts | `client.accounts()` |
+| Accounts | `client.accounts()` — **except `authorizeApplication`/`freeze`/`unfreeze`/`close`/`revokeRelationship`, which reject an API Key and require a Member session** (verified live, not documented anywhere else — `MemberPermissionPolicy.Require`, `AccountsEndpoints.cs`) |
 | Transactions | `client.transactions()` |
 | Deposits | `client.deposits()` |
 | Ledger | `client.ledger()` |
@@ -51,7 +51,9 @@ part of this module is the local signing flow, not the HTTP resource shape.
 
 ```java
 var account = client.accounts().create(organizationId, "customer-123");
-client.accounts().authorizeApplication(account.accountId(), applicationId);
+// authorizeApplication requires the Member client (`memberClient`), never the API Key one --
+// see the table above.
+memberClient.accounts().authorizeApplication(organizationId, account.accountId(), applicationId);
 
 var txn = client.transactions().create(organizationId, applicationId, null, assetNetworkId,
         amount, List.of(payer, recipient), null);
@@ -61,8 +63,14 @@ var intent = client.deposits().createPaymentIntent(organizationId, txn.transacti
 var fullIntent = client.deposits().getPaymentIntent(intent.paymentIntentId());
 // fullIntent.depositAddress() -- real address to watch on-chain
 
+// Once the deposit is confirmed, the Transaction reserves itself -- no explicit reserve() call
+// needed or valid in this path (verified live -- calling it here throws BR-TXN-002).
 var settlement = client.settlements().executeSettlement(txn.transactionId(), null);
 ```
+
+See [`examples/Example14MarketplaceJourney.java`](examples/src/main/java/com/ishtaran/examples/Example14MarketplaceJourney.java)
+for this same flow run in full, including the Payment Intent → deposit → confirmation → self-custody
+payout signing that this snippet omits.
 
 ## Real anonymous objects
 
