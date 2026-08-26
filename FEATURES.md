@@ -1,4 +1,4 @@
-# Features
+# Features Olá
 
 Derived from the real API contract (see the [API Reference](https://ishtaran.com/docs/api/ishtaran-api)). Core API: 100/100 real
 operations (16/16 modules). Easy Mode: 100% (`receivePayment`, `withdraw`, `getBalance`,
