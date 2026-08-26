@@ -70,4 +70,4 @@ var quote = client.withdrawals().quote(organizationId, accountId, destinationId,
 - [`AUTHENTICATION.md`](AUTHENTICATION.md) — when to use an API Key vs. Member login
 - [`EASY_MODE.md`](EASY_MODE.md) — complete criteria for when to use each layer
 - [`ERROR_HANDLING.md`](ERROR_HANDLING.md) — handling `IshtaranError`
-- [`examples/`](examples/) — 11 numbered examples, from quickstart to full Sandbox
+- [`examples/`](../examples/) — 11 numbered examples, from quickstart to full Sandbox

@@ -15,5 +15,5 @@ policy), differing only in each language's idiom (`client.withdrawals().quote(..
 
 Both shipped and at parity across all 4 languages: `client.wallets()`/`client.signingRequests()`
 (local wallet generation/restoration, canonical-hash signing, `SigningRequest` submission — see
-[README.md § Self-custody](README.md#self-custody)) and `client.accountHolders()` (global
-financial identity, `DEC-032` — see [README.md § What this SDK does](README.md#what-this-sdk-does)).
+[README.md § Self-custody](../README.md#self-custody)) and `client.accountHolders()` (global
+financial identity, `DEC-032` — see [README.md § What this SDK does](../README.md#what-this-sdk-does)).
