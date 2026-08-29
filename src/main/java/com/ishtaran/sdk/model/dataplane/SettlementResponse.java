@@ -21,6 +21,13 @@ public record SettlementResponse(
         UUID pricingPolicyId,
         SettlementStatus status,
         UUID entryGroupId,
+        /**
+         * DEC-037 — populated only under SelfCustody, once {@code SelfCustodySettlementExecutionStrategy}
+         * creates a real {@code SigningRequest} (never under ManagedCustody, never before there's
+         * something to sign). Fetch it via {@code client.signingRequests().get(signingRequestId)} to
+         * sign locally.
+         */
+        UUID signingRequestId,
         List<SettlementSplitAllocationResponse> splitAllocations,
         OffsetDateTime createdAt,
         OffsetDateTime executedAt) {

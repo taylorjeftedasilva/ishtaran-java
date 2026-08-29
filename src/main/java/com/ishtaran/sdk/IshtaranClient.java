@@ -22,6 +22,7 @@ import com.ishtaran.sdk.resources.DepositsResource;
 import com.ishtaran.sdk.resources.EnvironmentsResource;
 import com.ishtaran.sdk.resources.EventTypesResource;
 import com.ishtaran.sdk.resources.EventsResource;
+import com.ishtaran.sdk.resources.ExecutionDestinationsResource;
 import com.ishtaran.sdk.resources.LedgerResource;
 import com.ishtaran.sdk.resources.MembersResource;
 import com.ishtaran.sdk.resources.OrganizationsResource;
@@ -74,6 +75,7 @@ public final class IshtaranClient {
     private final WebhookDeliveriesResource webhookDeliveries;
     private final WalletsResource wallets;
     private final SigningRequestsResource signingRequests;
+    private final ExecutionDestinationsResource executionDestinations;
 
     private IshtaranClient(IshtaranClientConfig config) {
         this(decorateWithLogging(new JdkHttpTransport(config), config), config.apiKey(), config.retryPolicy());
@@ -131,6 +133,7 @@ public final class IshtaranClient {
         this.webhookDeliveries = new WebhookDeliveriesResource(transport);
         this.wallets = new WalletsResource(transport);
         this.signingRequests = new SigningRequestsResource(transport);
+        this.executionDestinations = new ExecutionDestinationsResource(transport);
     }
 
     public static Builder builder() {
@@ -232,6 +235,11 @@ public final class IshtaranClient {
     /** SPEC-019/020/021, checkpoint 7 -- the SDK signs locally ({@link com.ishtaran.sdk.wallet.Signer}) and submits it back. */
     public SigningRequestsResource signingRequests() {
         return signingRequests;
+    }
+
+    /** DEC-037 -- a beneficiary's registered on-chain receiving address per AssetNetwork, required before a Settlement can execute under SelfCustody. */
+    public ExecutionDestinationsResource executionDestinations() {
+        return executionDestinations;
     }
 
     // ---- Easy Mode ----

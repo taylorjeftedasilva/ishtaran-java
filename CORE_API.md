@@ -43,9 +43,12 @@ AccountHolders](README.md#what-this-sdk-does) for the identity model.
 ## Self-custody (`ExecutionCustody`)
 
 `client.wallets()` / `client.signingRequests()` — wallet registration, deposit address
-allocation, `SigningRequest` creation/submission. Covered with a full worked example in
-[README.md § Self-custody](README.md#self-custody) rather than duplicated here — the interesting
-part of this module is the local signing flow, not the HTTP resource shape.
+allocation, `SigningRequest` creation/submission. `client.executionDestinations()` — registers the
+real on-chain address a beneficiary `Account` gets paid at for a given `AssetNetwork`; required
+before a `Settlement` can execute under SelfCustody (`DEC-037`) — `settlements().executeSettlement`
+fails fast, before any signing/broadcast, if a participant has none registered. Covered with a full
+worked example in [README.md § Self-custody](README.md#self-custody) rather than duplicated here —
+the interesting part of this module is the local signing flow, not the HTTP resource shape.
 
 ## Example — full flow without Easy Mode
 
@@ -65,7 +68,7 @@ var fullIntent = client.deposits().getPaymentIntent(intent.paymentIntentId());
 
 // Once the deposit is confirmed, the Transaction reserves itself -- no explicit reserve() call
 // needed or valid in this path (verified live -- calling it here throws BR-TXN-002).
-var settlement = client.settlements().executeSettlement(txn.transactionId(), null);
+var settlement = client.settlements().executeSettlement(txn.transactionId(), null, null);
 ```
 
 See [`examples/Example14MarketplaceJourney.java`](examples/src/main/java/com/ishtaran/examples/Example14MarketplaceJourney.java)

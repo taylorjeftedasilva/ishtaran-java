@@ -9,6 +9,8 @@ import com.ishtaran.sdk.model.dataplane.SettlementResponse;
 import com.ishtaran.sdk.model.dataplane.TransactionSettlementSummaryResponse;
 import com.ishtaran.sdk.serialization.JsonCodec;
 
+import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,8 +22,17 @@ public final class SettlementsResource extends ApiResourceSupport {
         super(transport);
     }
 
-    public ExecuteSettlementResult executeSettlement(UUID transactionId, String idempotencyKey) {
-        var body = toJson(Map.of("idempotencyKey", IdempotencyKeyGenerator.resolve(idempotencyKey)));
+    /**
+     * {@code amount} null = settle the full remaining reserved amount (unchanged default);
+     * informed = settle exactly that amount (BL-STL-008, activated 2026-08-26) -- callable
+     * repeatedly on the same Transaction until the remaining reserved balance reaches zero, each
+     * call computing its own Platform Fee on its own gross slice.
+     */
+    public ExecuteSettlementResult executeSettlement(UUID transactionId, BigDecimal amount, String idempotencyKey) {
+        var payload = new LinkedHashMap<String, Object>();
+        payload.put("idempotencyKey", IdempotencyKeyGenerator.resolve(idempotencyKey));
+        payload.put("amount", amount);
+        var body = toJson(payload);
         return execute(HttpRequest.post("/v1/transactions/" + transactionId + "/settlements", body, true),
                 ExecuteSettlementResult.class);
     }

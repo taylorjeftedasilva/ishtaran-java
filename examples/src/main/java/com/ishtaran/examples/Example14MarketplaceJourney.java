@@ -106,7 +106,7 @@ public final class Example14MarketplaceJourney {
 
         // 8. Settlement -- calculates the Platform Fee/Distributable split. It does not move
         //    funds by itself; step 9 requests the real payout signature explicitly.
-        var settlement = client.settlements().executeSettlement(txn.transactionId(), null);
+        var settlement = client.settlements().executeSettlement(txn.transactionId(), null, null);
         System.out.println("[8] settlement executed id=" + settlement.settlementId());
 
         // 9. The marketplace requests a SigningRequest for the real payout (seller's share,

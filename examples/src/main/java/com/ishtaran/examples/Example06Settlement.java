@@ -16,7 +16,7 @@ public final class Example06Settlement {
 
         UUID transactionId = UUID.fromString(System.getenv("ISHTARAN_TRANSACTION_ID"));
 
-        var result = client.settlements().executeSettlement(transactionId, null);
+        var result = client.settlements().executeSettlement(transactionId, null, null);
         System.out.println("settlementId=" + result.settlementId());
 
         var settlement = client.settlements().get(result.settlementId());
