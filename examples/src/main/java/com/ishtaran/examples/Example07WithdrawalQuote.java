@@ -19,16 +19,21 @@ public final class Example07WithdrawalQuote {
                 .build();
 
         UUID organizationId = UUID.fromString(System.getenv("ISHTARAN_ORGANIZATION_ID"));
+        UUID environmentId = UUID.fromString(System.getenv("ISHTARAN_ENVIRONMENT_ID"));
         UUID accountId = UUID.fromString(System.getenv("ISHTARAN_PAYER_ACCOUNT_ID"));
         UUID destinationId = UUID.fromString(System.getenv("ISHTARAN_WITHDRAWAL_DESTINATION_ID"));
         UUID assetNetworkId = UUID.fromString(System.getenv("ISHTARAN_ASSET_NETWORK_ID"));
 
-        var quote = client.withdrawals().quote(organizationId, accountId, destinationId,
+        var quote = client.withdrawals().quote(organizationId, environmentId, accountId, destinationId,
                 assetNetworkId, new BigDecimal("50"));
 
         System.out.println("requestedAmount=" + quote.requestedAmount());
-        System.out.println("estimatedNetworkFee=" + quote.estimatedNetworkFee());
+        // Under SelfCustody the beneficiary always receives the full requestedAmount --
+        // estimatedNetworkFee is deprecated and always null. networkExecutionCost is the real
+        // network cost (paid separately, per the registered NetworkCostPayerAccount, never
+        // subtracted from what the beneficiary receives).
         System.out.println("estimatedRecipientAmount=" + quote.estimatedRecipientAmount());
+        System.out.println("networkExecutionCost=" + quote.networkExecutionCost());
         System.out.println("expiresAt=" + quote.expiresAt());
     }
 }

@@ -26,21 +26,27 @@ class WithdrawalsResourceTest {
         String responseBody = """
                 {
                   "accountId": "%s", "withdrawalDestinationId": "%s", "assetNetworkId": "%s",
-                  "requestedAmount": 100, "estimatedNetworkFee": 0.4, "estimatedRecipientAmount": 99.6,
-                  "expiresAt": "2026-08-17T12:00:00Z"
+                  "requestedAmount": 100, "estimatedNetworkFee": null, "estimatedRecipientAmount": 100,
+                  "networkExecutionCost": 0.84364, "expiresAt": "2026-08-17T12:00:00Z"
                 }
                 """.formatted(accountId, destId, assetNetworkId);
 
         var fake = new FakeHttpTransport().enqueue(FakeHttpTransport.json(200, responseBody));
         var resource = new WithdrawalsResource(fake);
 
-        var quote = resource.quote(orgId, accountId, destId, assetNetworkId, new BigDecimal("100"));
+        UUID environmentId = UUID.randomUUID();
+        var quote = resource.quote(orgId, environmentId, accountId, destId, assetNetworkId, new BigDecimal("100"));
 
-        assertEquals(new BigDecimal("0.4"), quote.estimatedNetworkFee());
-        assertEquals(new BigDecimal("99.6"), quote.estimatedRecipientAmount());
+        assertEquals(null, quote.estimatedNetworkFee());
+        assertEquals(new BigDecimal("100"), quote.estimatedRecipientAmount());
+        assertEquals(new BigDecimal("0.84364"), quote.networkExecutionCost());
         assertEquals(1, fake.requestCount());
         assertEquals("POST", fake.received().get(0).method().name());
         assertTrue(fake.received().get(0).path().endsWith("/withdrawals/quote"));
+        // Regression: GetWithdrawalQuoteQuery/RequestWithdrawalCommand require environmentId
+        // server-side (RequestWithdrawalRequest.cs) -- omitting it defaults to Guid.Empty and
+        // fails FluentValidation with a 400 VALIDATION_ERROR, confirmed live 2026-08-31.
+        assertTrue(fake.received().get(0).body().contains(environmentId.toString()));
     }
 
     @Test
@@ -48,24 +54,28 @@ class WithdrawalsResourceTest {
         UUID orgId = UUID.randomUUID();
         String responseBody = """
                 {
-                  "withdrawalId": "%s", "organizationId": "%s", "accountId": "%s",
+                  "withdrawalId": "%s", "organizationId": "%s", "environmentId": "%s", "accountId": "%s",
                   "withdrawalDestinationId": "%s", "assetNetworkId": "%s",
-                  "amount": 100, "estimatedNetworkFee": 0.4, "estimatedRecipientAmount": 99.6,
+                  "amount": 100, "estimatedNetworkFee": null, "estimatedRecipientAmount": 100,
                   "finalNetworkFee": null, "finalRecipientAmount": null,
                   "status": 0, "entryGroupId": null, "technicalReference": null,
+                  "signingRequestId": "%s", "networkExecutionCost": 0.84364, "networkExecutionCostStatus": 0,
                   "createdAt": "2026-08-17T12:00:00Z"
                 }
-                """.formatted(UUID.randomUUID(), orgId, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+                """.formatted(UUID.randomUUID(), orgId, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
 
         var fake = new FakeHttpTransport().enqueue(FakeHttpTransport.json(201, responseBody));
         var resource = new WithdrawalsResource(fake);
 
-        var result = resource.request(orgId, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
+        UUID environmentId = UUID.randomUUID();
+        var result = resource.request(orgId, environmentId, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),
                 new BigDecimal("100"), null);
 
         assertEquals(WithdrawalStatus.REQUESTED, result.status());
+        assertEquals(new BigDecimal("0.84364"), result.networkExecutionCost());
         HttpRequest sentRequest = fake.received().get(0);
         assertTrue(sentRequest.body().contains("idempotencyKey"));
+        assertTrue(sentRequest.body().contains(environmentId.toString()));
     }
 
     @Test

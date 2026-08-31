@@ -23,9 +23,13 @@ import com.ishtaran.sdk.resources.EnvironmentsResource;
 import com.ishtaran.sdk.resources.EventTypesResource;
 import com.ishtaran.sdk.resources.EventsResource;
 import com.ishtaran.sdk.resources.ExecutionDestinationsResource;
+import com.ishtaran.sdk.resources.ExecutionSourcesResource;
 import com.ishtaran.sdk.resources.LedgerResource;
 import com.ishtaran.sdk.resources.MembersResource;
+import com.ishtaran.sdk.resources.NetworkCostPayerAccountsResource;
+import com.ishtaran.sdk.resources.NetworkExecutionResource;
 import com.ishtaran.sdk.resources.OrganizationsResource;
+import com.ishtaran.sdk.resources.PayoutResource;
 import com.ishtaran.sdk.resources.RefundsResource;
 import com.ishtaran.sdk.resources.SandboxResource;
 import com.ishtaran.sdk.resources.SettlementsResource;
@@ -76,6 +80,10 @@ public final class IshtaranClient {
     private final WalletsResource wallets;
     private final SigningRequestsResource signingRequests;
     private final ExecutionDestinationsResource executionDestinations;
+    private final ExecutionSourcesResource executionSources;
+    private final NetworkCostPayerAccountsResource networkCostPayerAccounts;
+    private final NetworkExecutionResource networkExecution;
+    private final PayoutResource payout;
 
     private IshtaranClient(IshtaranClientConfig config) {
         this(decorateWithLogging(new JdkHttpTransport(config), config), config.apiKey(), config.retryPolicy());
@@ -134,6 +142,10 @@ public final class IshtaranClient {
         this.wallets = new WalletsResource(transport);
         this.signingRequests = new SigningRequestsResource(transport);
         this.executionDestinations = new ExecutionDestinationsResource(transport);
+        this.executionSources = new ExecutionSourcesResource(transport);
+        this.networkCostPayerAccounts = new NetworkCostPayerAccountsResource(transport);
+        this.networkExecution = new NetworkExecutionResource(transport);
+        this.payout = new PayoutResource(transport);
     }
 
     public static Builder builder() {
@@ -242,6 +254,26 @@ public final class IshtaranClient {
         return executionDestinations;
     }
 
+    /** SPEC-ADDRESSPOOL-001, CUSTODY-EXECUTION-MODES.md -- the outbound-only address ExecutionCustody signs FROM to pay network cost, per AssetNetwork. */
+    public ExecutionSourcesResource executionSources() {
+        return executionSources;
+    }
+
+    /** SPEC-NETEXEC-001 -- the Account debited for the charged network cost of a NetworkExecutionQuote. */
+    public NetworkCostPayerAccountsResource networkCostPayerAccounts() {
+        return networkCostPayerAccounts;
+    }
+
+    /** SPEC-NETEXEC-001 -- priced, time-boxed plans for 1..N physical on-chain operations. */
+    public NetworkExecutionResource networkExecution() {
+        return networkExecution;
+    }
+
+    /** SPEC-024/SPEC-025 -- Payable summary and batched Payout execution. */
+    public PayoutResource payout() {
+        return payout;
+    }
+
     // ---- Easy Mode ----
 
     /** Direct pass-through to {@code ledger().getBalance()} -- no business transformation (see SDK_CAPABILITY_SPEC.md section 5). */
@@ -254,7 +286,7 @@ public final class IshtaranClient {
      * never hides the Network Fee, always returns the real {@code withdrawalId} from Core. If
      * {@code existingDestinationId} is null, creates a new destination first.
      */
-    public EasyWithdrawResult withdraw(UUID organizationId, UUID accountId, UUID assetNetworkId,
+    public EasyWithdrawResult withdraw(UUID organizationId, UUID environmentId, UUID accountId, UUID assetNetworkId,
                                         BigDecimal amount, String destinationAddress, UUID existingDestinationId) {
         UUID destinationId = existingDestinationId;
         if (destinationId == null) {
@@ -263,13 +295,14 @@ public final class IshtaranClient {
             destinationId = destination.withdrawalDestinationId();
         }
 
-        var result = withdrawals.request(organizationId, accountId, destinationId, assetNetworkId, amount, null);
+        var result = withdrawals.request(organizationId, environmentId, accountId, destinationId, assetNetworkId, amount, null);
 
         return new EasyWithdrawResult(
                 result.withdrawalId(),
                 result.amount(),
                 result.estimatedNetworkFee(),
                 result.estimatedRecipientAmount(),
+                result.networkExecutionCost(),
                 result.status());
     }
 

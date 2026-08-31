@@ -17,15 +17,19 @@ public final class Example08Withdrawal {
                 .build();
 
         UUID organizationId = UUID.fromString(System.getenv("ISHTARAN_ORGANIZATION_ID"));
+        UUID environmentId = UUID.fromString(System.getenv("ISHTARAN_ENVIRONMENT_ID"));
         UUID accountId = UUID.fromString(System.getenv("ISHTARAN_PAYER_ACCOUNT_ID"));
         UUID assetNetworkId = UUID.fromString(System.getenv("ISHTARAN_ASSET_NETWORK_ID"));
 
-        var withdrawal = client.withdraw(organizationId, accountId, assetNetworkId,
+        var withdrawal = client.withdraw(organizationId, environmentId, accountId, assetNetworkId,
                 new BigDecimal("50"), "TDestinationAddressReal", null);
 
         System.out.println("withdrawalId=" + withdrawal.withdrawalId());
+        // Under SelfCustody the beneficiary receives the full requested amount --
+        // networkExecutionCost is the real network cost, charged separately to the registered
+        // NetworkCostPayerAccount.
         System.out.println("You receive " + withdrawal.estimatedRecipientAmount()
-                + " (network fee: " + withdrawal.estimatedNetworkFee() + ")");
+                + " (network execution cost: " + withdrawal.networkExecutionCost() + ")");
 
         var finalState = client.withdrawals().waitFor(withdrawal.withdrawalId(), Duration.ofMinutes(15), Duration.ofSeconds(10));
         System.out.println("Final status: " + finalState.status());

@@ -37,10 +37,11 @@ class WithdrawalsWaitForTest {
 
     private static String withdrawalJson(UUID id, int status) {
         return """
-                {"withdrawalId":"%s","organizationId":"%s","accountId":"%s","withdrawalDestinationId":"%s",
-                 "assetNetworkId":"%s","amount":100,"estimatedNetworkFee":0.4,"estimatedRecipientAmount":99.6,
+                {"withdrawalId":"%s","organizationId":"%s","environmentId":"%s","accountId":"%s","withdrawalDestinationId":"%s",
+                 "assetNetworkId":"%s","amount":100,"estimatedNetworkFee":null,"estimatedRecipientAmount":100,
                  "finalNetworkFee":null,"finalRecipientAmount":null,"status":%d,"entryGroupId":null,
-                 "technicalReference":null,"createdAt":"2026-08-17T12:00:00Z"}
-                """.formatted(id, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), status);
+                 "technicalReference":null,"signingRequestId":null,"networkExecutionCost":null,
+                 "networkExecutionCostStatus":null,"createdAt":"2026-08-17T12:00:00Z"}
+                """.formatted(id, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), status);
     }
 }

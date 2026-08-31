@@ -32,10 +32,10 @@ public final class WithdrawalsResource extends ApiResourceSupport {
         super(transport);
     }
 
-    public WithdrawalQuoteResponse quote(UUID organizationId, UUID accountId, UUID withdrawalDestinationId,
+    public WithdrawalQuoteResponse quote(UUID organizationId, UUID environmentId, UUID accountId, UUID withdrawalDestinationId,
                                           UUID assetNetworkId, BigDecimal amount) {
         var body = toJson(Map.of(
-                "accountId", accountId, "withdrawalDestinationId", withdrawalDestinationId,
+                "environmentId", environmentId, "accountId", accountId, "withdrawalDestinationId", withdrawalDestinationId,
                 "assetNetworkId", assetNetworkId, "amount", amount));
         return execute(HttpRequest.post(
                 "/v1/organizations/" + organizationId + "/withdrawals/quote", body, true),
@@ -49,11 +49,11 @@ public final class WithdrawalsResource extends ApiResourceSupport {
                 CreateWithdrawalDestinationResult.class);
     }
 
-    public WithdrawalResponse request(UUID organizationId, UUID accountId, UUID withdrawalDestinationId,
+    public WithdrawalResponse request(UUID organizationId, UUID environmentId, UUID accountId, UUID withdrawalDestinationId,
                                        UUID assetNetworkId, BigDecimal amount, String idempotencyKey) {
         var key = IdempotencyKeyGenerator.resolve(idempotencyKey);
         var body = toJson(Map.of(
-                "accountId", accountId, "withdrawalDestinationId", withdrawalDestinationId,
+                "environmentId", environmentId, "accountId", accountId, "withdrawalDestinationId", withdrawalDestinationId,
                 "assetNetworkId", assetNetworkId, "amount", amount, "idempotencyKey", key));
         return execute(HttpRequest.post(
                 "/v1/organizations/" + organizationId + "/withdrawals", body, true),
