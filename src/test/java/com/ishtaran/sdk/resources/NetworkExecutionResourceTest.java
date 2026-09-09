@@ -43,7 +43,8 @@ class NetworkExecutionResourceTest {
                   "expiresAt": "2026-08-31T12:00:00Z",
                   "totalCharged": 3.16456,
                   "networkCostPayer": 0,
-                  "authorizedNativeCost": 6.3
+                  "authorizedNativeCost": 6.3,
+                  "margin": 0.15
                 }
                 """.formatted(assetNetworkId, UUID.randomUUID());
 
@@ -63,6 +64,7 @@ class NetworkExecutionResourceTest {
         assertEquals(2, quote.plan().transactions().size());
         assertEquals(new BigDecimal("3.16456"), quote.totalCharged());
         assertEquals(new BigDecimal("6.3"), quote.authorizedNativeCost());
+        assertEquals(new BigDecimal("0.15"), quote.margin());
         assertEquals("SELF", quote.resourceSource().name());
         assertEquals("INTEGRATOR", quote.networkCostPayer().name());
     }
@@ -75,7 +77,7 @@ class NetworkExecutionResourceTest {
                   "estimatedResources": {"lines": []}, "nativeExecutionCost": 0, "resourceAssetNetworkId": null,
                   "quoteCurrency": null, "fx": 1, "safetyBuffer": 0, "resourceSource": 0, "replenishmentRequirement": null,
                   "conversionOverhead": 0, "expiresAt": "2026-08-31T12:00:00Z", "totalCharged": 0, "networkCostPayer": 1,
-                  "authorizedNativeCost": 0
+                  "authorizedNativeCost": 0, "margin": 0
                 }
                 """.formatted(UUID.randomUUID());
         var fake = new FakeHttpTransport().enqueue(FakeHttpTransport.json(200, responseBody));

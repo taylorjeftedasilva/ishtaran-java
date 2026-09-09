@@ -16,7 +16,8 @@ import java.util.UUID;
  * safetyBuffer + replenishmentRequirement + conversionOverhead}. {@code authorizedNativeCost} is
  * the number actually reserved for execution (&gt;= the sum of every physical operation's cost,
  * INC-18) — never compare a caller-supplied estimate directly against {@code nativeExecutionCost}
- * alone.
+ * alone. {@code margin} is the Ishtaran markup applied in ISHTARAN_RESOURCES mode (always
+ * {@code 0} in CUSTOMER_RESOURCES mode).
  */
 public record NetworkExecutionQuoteResponse(
         String network,
@@ -33,5 +34,6 @@ public record NetworkExecutionQuoteResponse(
         OffsetDateTime expiresAt,
         BigDecimal totalCharged,
         NetworkCostPayer networkCostPayer,
-        BigDecimal authorizedNativeCost) {
+        BigDecimal authorizedNativeCost,
+        BigDecimal margin) {
 }

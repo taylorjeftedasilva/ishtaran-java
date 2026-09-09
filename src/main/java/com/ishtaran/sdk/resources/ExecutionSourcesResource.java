@@ -5,6 +5,7 @@ import com.ishtaran.sdk.http.HttpTransport;
 import com.ishtaran.sdk.model.dataplane.RegisterExecutionSourceResult;
 import com.ishtaran.sdk.serialization.JsonCodec;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
@@ -32,6 +33,24 @@ public final class ExecutionSourcesResource extends ApiResourceSupport {
         var body = toJson(payload);
         return execute(HttpRequest.post("/v1/organizations/" + organizationId + "/execution-sources", body, false),
                 RegisterExecutionSourceResult.class);
+    }
+
+    /**
+     * F.18 — self-reported (no on-chain verification in this version) declaration of the
+     * on-chain resource capacity available to the Wallet backing this ExecutionSource. Required
+     * before CUSTOMER_RESOURCES (SELF) mode can ever succeed for it — the platform checks this
+     * declared stake for sufficiency at quote time. Safe to call again any time to re-sync (no
+     * first-registration-wins restriction, unlike {@link #register}).
+     */
+    public void syncResourceStake(UUID organizationId, UUID executionSourceId, BigDecimal availableNativeAmount,
+                                   BigDecimal availableEnergy, BigDecimal availableBandwidth) {
+        var payload = new LinkedHashMap<String, Object>();
+        payload.put("availableNativeAmount", availableNativeAmount);
+        payload.put("availableEnergy", availableEnergy);
+        payload.put("availableBandwidth", availableBandwidth);
+        var body = toJson(payload);
+        executeNoContent(HttpRequest.post(
+                "/v1/organizations/" + organizationId + "/execution-sources/" + executionSourceId + "/resource-stake", body, false));
     }
 
     private String toJson(Object value) {

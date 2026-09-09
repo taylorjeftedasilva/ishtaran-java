@@ -31,6 +31,11 @@ public final class HttpRequest {
         return new HttpRequest(HttpMethod.POST, path, jsonBody, idempotent);
     }
 
+    /** PATCH is always idempotent by construction here -- every caller sends the full desired state, never a delta. */
+    public static HttpRequest patch(String path, String jsonBody) {
+        return new HttpRequest(HttpMethod.PATCH, path, jsonBody, true);
+    }
+
     public static HttpRequest delete(String path) {
         return new HttpRequest(HttpMethod.DELETE, path, null, false);
     }

@@ -3,6 +3,7 @@ package com.ishtaran.sdk.resources;
 import com.ishtaran.sdk.http.HttpRequest;
 import com.ishtaran.sdk.http.HttpTransport;
 import com.ishtaran.sdk.model.dataplane.RegisterNetworkCostPayerAccountResult;
+import com.ishtaran.sdk.model.enums.NetworkResourceSource;
 import com.ishtaran.sdk.serialization.JsonCodec;
 
 import java.util.LinkedHashMap;
@@ -28,6 +29,25 @@ public final class NetworkCostPayerAccountsResource extends ApiResourceSupport {
         var body = toJson(payload);
         return execute(HttpRequest.post("/v1/organizations/" + organizationId + "/network-cost-payer-accounts", body, false),
                 RegisterNetworkCostPayerAccountResult.class);
+    }
+
+    /**
+     * F.18 — switches this Organization's Network Execution mode for {@code assetNetworkId}
+     * between {@link NetworkResourceSource#SELF} (CUSTOMER_RESOURCES, the integrator's own
+     * on-chain resources) and {@link NetworkResourceSource#ISHTARAN_SPONSORED} (the default).
+     * {@code allowFallbackToIshtaranResources} only matters when {@code resourcePreference} is
+     * {@code SELF} — it decides whether an insufficient CUSTOMER_RESOURCES balance falls back to
+     * ISHTARAN_RESOURCES instead of failing closed. Requires a NetworkCostPayerAccount already
+     * registered for this (organizationId, assetNetworkId) pair via {@link #register}.
+     */
+    public void updateResourcePreference(UUID organizationId, UUID assetNetworkId,
+                                          NetworkResourceSource resourcePreference, boolean allowFallbackToIshtaranResources) {
+        var payload = new LinkedHashMap<String, Object>();
+        payload.put("resourcePreference", resourcePreference);
+        payload.put("allowFallbackToIshtaranResources", allowFallbackToIshtaranResources);
+        var body = toJson(payload);
+        executeNoContent(HttpRequest.patch(
+                "/v1/organizations/" + organizationId + "/network-cost-payer-accounts/" + assetNetworkId + "/resource-preference", body));
     }
 
     private String toJson(Object value) {
