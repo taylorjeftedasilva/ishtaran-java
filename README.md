@@ -134,6 +134,11 @@ multi-source funding today.
   preference — see [CORE_API.md § Network Execution Engine](CORE_API.md#network-execution-engine-executioncustody)
 - Payout: payable summary (accrued/paid, never the same as on-chain balance), Manual PayoutBatch
   creation and retrieval — see [CORE_API.md § Payout](CORE_API.md#payout-spec-024spec-025)
+- Wallet Balance: `client.walletBalance()` — the wallet's own observed on-chain balance at a
+  registered self-custody address (snapshot read, authoritative refresh with a server-side 30s
+  guard, multi-asset/multi-network aggregate) — a fundamentally different question from
+  `client.ledger()`'s economic accounting, never summed or substituted for one another — see
+  [CORE_API.md § Wallet Balance](CORE_API.md#wallet-balance)
 
 This is deliberately not a full reference — see [FEATURES.md](FEATURES.md) and the
 [API Reference](https://ishtaran.com/docs/api/ishtaran-api) for details.
@@ -144,7 +149,7 @@ This is deliberately not a full reference — see [FEATURES.md](FEATURES.md) and
 <dependency>
     <groupId>com.ishtaran</groupId>
     <artifactId>ishtaran-java</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.2</version>
 </dependency>
 ```
 
@@ -152,13 +157,17 @@ Or Gradle:
 
 ```groovy
 dependencies {
-    implementation 'com.ishtaran:ishtaran-java:0.1.0'
+    implementation 'com.ishtaran:ishtaran-java:0.1.2'
 }
 ```
 
-`0.1.0` is a real, published **Development Preview** release on Maven Central -- verified live
-with a real `mvn dependency:get` from a clean local repository. See
-[CHANGELOG.md](CHANGELOG.md) for what's in it.
+`0.1.2` is a real, published **Development Preview** release on Maven Central -- verified live
+with a real `mvn dependency:get` from a clean local repository (2026-09-11). `0.1.3` and `0.1.4`
+(this release -- Wallet Balance, G.2) are tagged and staged in the Central Portal but not yet
+manually published there (the first release from a new namespace requires a one-time human click
+in the Portal UI, see [CONTRIBUTING.md](CONTRIBUTING.md) if present, or the repository owner) --
+don't depend on them until this note is removed. See [CHANGELOG.md](CHANGELOG.md) for what's in
+each version regardless.
 
 Requires **Java 17+**.
 
@@ -234,7 +243,7 @@ for the complete real contract.
 
 ## Package distribution roadmap
 
-`0.1.0` (Development Preview) is published on Maven Central — see [Installation](#installation).
+`0.1.2` (Development Preview) is published on Maven Central — see [Installation](#installation).
 Future releases follow the same path: a reviewed, tested commit gets a new semver tag, GPG-signed
 artifacts are staged via the Central Publisher Portal, and the repository owner does the final
 manual publish click in the Portal.

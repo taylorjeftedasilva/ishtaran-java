@@ -36,6 +36,7 @@ import com.ishtaran.sdk.resources.SettlementsResource;
 import com.ishtaran.sdk.resources.SigningRequestsResource;
 import com.ishtaran.sdk.resources.TransactionsResource;
 import com.ishtaran.sdk.resources.WebhookDeliveriesResource;
+import com.ishtaran.sdk.resources.WalletBalanceResource;
 import com.ishtaran.sdk.resources.WalletsResource;
 import com.ishtaran.sdk.resources.WebhookEndpointsResource;
 import com.ishtaran.sdk.resources.WithdrawalsResource;
@@ -84,6 +85,7 @@ public final class IshtaranClient {
     private final NetworkCostPayerAccountsResource networkCostPayerAccounts;
     private final NetworkExecutionResource networkExecution;
     private final PayoutResource payout;
+    private final WalletBalanceResource walletBalance;
 
     private IshtaranClient(IshtaranClientConfig config) {
         this(decorateWithLogging(new JdkHttpTransport(config), config), config.apiKey(), config.retryPolicy());
@@ -146,6 +148,7 @@ public final class IshtaranClient {
         this.networkCostPayerAccounts = new NetworkCostPayerAccountsResource(transport);
         this.networkExecution = new NetworkExecutionResource(transport);
         this.payout = new PayoutResource(transport);
+        this.walletBalance = new WalletBalanceResource(transport);
     }
 
     public static Builder builder() {
@@ -272,6 +275,11 @@ public final class IshtaranClient {
     /** SPEC-024/SPEC-025 -- Payable summary and batched Payout execution. */
     public PayoutResource payout() {
         return payout;
+    }
+
+    /** The wallet's own on-chain balance, never the Ledger (see {@link WalletBalanceResource}'s own doc). */
+    public WalletBalanceResource walletBalance() {
+        return walletBalance;
     }
 
     // ---- Easy Mode ----

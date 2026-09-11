@@ -5,6 +5,30 @@ still change before a stable 1.0.0.
 
 ## [Unreleased]
 
+## [0.1.4] — 2026-09-11
+
+- **Wallet Balance / On-Chain Balance capability** (`client.walletBalance()`) — the wallet's own
+  observed on-chain balance at a registered self-custody address, a fundamentally different
+  question from `client.ledger().getBalance()` (Ishtaran's own economic accounting) — never
+  summed, never substituted for one another:
+  - `getBalance(accountId, environmentId, assetNetworkId)` — cheap, returns the last known
+    snapshot, never a blockchain/RPC call itself.
+  - `refreshBalance(accountId, environmentId, assetNetworkId)` — asks the platform to check
+    authoritatively right now; subject to the platform's own 30s freshness/single-flight guard
+    server-side (check `refreshSuppressed`/`stale` on the result rather than polling blindly —
+    calling it too often is always safe, never an error).
+  - `getAssetBalances(accountId, environmentId, assetNetworkIds)` — aggregates balance across the
+    given AssetNetworks, grouped by Asset (e.g. USDT total across TRON + any future network),
+    broken down per-network in the result — never summed across different Assets.
+  - `accountId` is the walletId throughout (`ExecutionDestination` already ties one Account to
+    one registered self-custody address per AssetNetwork — no separate wallet-registration
+    concept).
+- **G.2 fixed** — `BalanceResponse` (from `client.ledger().getBalance()`/`client.getBalance()`)
+  was silently dropping `payable`, `reservedForPayout`, and `delivered` — present on the real
+  backend record since `SPEC-024/025` (2026-08-30), never parsed by this SDK. All three now
+  present on the returned record. Backward compatible: the compact canonical constructor
+  null-coalesces all three to `BigDecimal.ZERO` when a wire response omits them, never a `null` a
+  caller could NPE on.
 - F.18 (Network Execution Engine, CUSTOMER_RESOURCES/ISHTARAN_RESOURCES product model) — additive,
   non-breaking:
   - `NetworkExecutionQuoteResponse.margin()` — the Ishtaran markup applied in ISHTARAN_RESOURCES
