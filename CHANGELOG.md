@@ -5,6 +5,10 @@ still change before a stable 1.0.0.
 
 ## [Unreleased]
 
+- **Fixed** — `UserAgent.DEFAULT` (`ishtaran-java/<version>`, sent on every request) was frozen at
+  `0.1.3` since that release — every subsequent version sent a stale version string, found during
+  a public-knowledge audit. `SDK_VERSION` now correctly reads `0.1.5`.
+
 ## [0.1.5] — 2026-09-11
 
 - **`client.transactions().searchExecutions()`/`searchExecutionsAll()`** (new) — discoverability
