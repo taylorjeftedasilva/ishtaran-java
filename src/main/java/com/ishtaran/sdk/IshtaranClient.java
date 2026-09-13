@@ -35,6 +35,7 @@ import com.ishtaran.sdk.resources.SandboxResource;
 import com.ishtaran.sdk.resources.SettlementsResource;
 import com.ishtaran.sdk.resources.SigningRequestsResource;
 import com.ishtaran.sdk.resources.TransactionsResource;
+import com.ishtaran.sdk.resources.TransfersResource;
 import com.ishtaran.sdk.resources.WebhookDeliveriesResource;
 import com.ishtaran.sdk.resources.WalletBalanceResource;
 import com.ishtaran.sdk.resources.WalletsResource;
@@ -70,6 +71,7 @@ public final class IshtaranClient {
     private final DepositsResource deposits;
     private final LedgerResource ledger;
     private final SettlementsResource settlements;
+    private final TransfersResource transfers;
     private final RefundsResource refunds;
     private final WithdrawalsResource withdrawals;
     private final WorkflowsResource workflows;
@@ -133,6 +135,7 @@ public final class IshtaranClient {
         this.deposits = new DepositsResource(transport);
         this.ledger = new LedgerResource(transport);
         this.settlements = new SettlementsResource(transport);
+        this.transfers = new TransfersResource(transport);
         this.refunds = new RefundsResource(transport);
         this.withdrawals = new WithdrawalsResource(transport);
         this.workflows = new WorkflowsResource(transport);
@@ -208,6 +211,11 @@ public final class IshtaranClient {
 
     public SettlementsResource settlements() {
         return settlements;
+    }
+
+    /** SPEC-TRANSFER-001/002, BR-TRF-008 — first-class Transfer (Account/Wallet -&gt; another Account or external address), never a Payment/PaymentIntent/Settlement in disguise. */
+    public TransfersResource transfers() {
+        return transfers;
     }
 
     public RefundsResource refunds() {

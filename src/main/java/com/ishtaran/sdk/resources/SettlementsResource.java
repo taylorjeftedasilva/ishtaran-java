@@ -7,6 +7,7 @@ import com.ishtaran.sdk.idempotency.IdempotencyKeyGenerator;
 import com.ishtaran.sdk.model.dataplane.ExecuteSettlementResult;
 import com.ishtaran.sdk.model.dataplane.SettlementResponse;
 import com.ishtaran.sdk.model.dataplane.TransactionSettlementSummaryResponse;
+import com.ishtaran.sdk.model.enums.OperationType;
 import com.ishtaran.sdk.serialization.JsonCodec;
 
 import java.math.BigDecimal;
@@ -29,9 +30,20 @@ public final class SettlementsResource extends ApiResourceSupport {
      * call computing its own Platform Fee on its own gross slice.
      */
     public ExecuteSettlementResult executeSettlement(UUID transactionId, BigDecimal amount, String idempotencyKey) {
+        return executeSettlement(transactionId, amount, idempotencyKey, null);
+    }
+
+    /**
+     * PROMPT 7 (SPEC-TRANSFER-001) — {@code operationType} selects which PricingPolicy rate
+     * applies (null = {@link OperationType#MARKETPLACE}, 100% backward compatible — never
+     * inferred from the Transaction's own shape). Pass {@link OperationType#PAYMENT} for a
+     * simple 2-party payment (0.40%), leave it null for a marketplace/split settlement (0.90%).
+     */
+    public ExecuteSettlementResult executeSettlement(UUID transactionId, BigDecimal amount, String idempotencyKey, OperationType operationType) {
         var payload = new LinkedHashMap<String, Object>();
         payload.put("idempotencyKey", IdempotencyKeyGenerator.resolve(idempotencyKey));
         payload.put("amount", amount);
+        payload.put("operationType", operationType != null ? operationType.rawValue() : null);
         var body = toJson(payload);
         return execute(HttpRequest.post("/v1/transactions/" + transactionId + "/settlements", body, true),
                 ExecuteSettlementResult.class);

@@ -35,6 +35,28 @@ public final class WalletsResource extends ApiResourceSupport {
         return execute(HttpRequest.post("/v1/applications/" + applicationId + "/wallets", body, true), RegisterWalletResult.class);
     }
 
+    /**
+     * BR-TRF-008 (PROMPT 7.1) — registers the execution/signing identity OWNED by a specific
+     * Account (its own {@code publicDerivationMaterial}, generated independently client-side —
+     * never the same material as the Application's shared {@link #register} Wallet). Required
+     * before that Account can be the {@code sourceAccountId} of a
+     * {@code client.transfers().request(...)} call for this {@code networkId}. Index 0 is
+     * reserved automatically as this Account's own receiving address (no separate
+     * {@link #allocateDepositAddress} call needed for it).
+     */
+    public RegisterWalletResult registerForAccount(UUID organizationId, UUID accountId, UUID applicationId, UUID networkId,
+                                                     DerivationScheme scheme, String publicDerivationMaterial, String idempotencyKey) {
+        var payload = new LinkedHashMap<String, Object>();
+        payload.put("applicationId", applicationId);
+        payload.put("networkId", networkId);
+        payload.put("scheme", scheme.rawValue());
+        payload.put("publicDerivationMaterial", publicDerivationMaterial);
+        payload.put("idempotencyKey", IdempotencyKeyGenerator.resolve(idempotencyKey));
+        var body = toJson(payload);
+        return execute(HttpRequest.post("/v1/organizations/" + organizationId + "/accounts/" + accountId + "/wallets", body, true),
+                RegisterWalletResult.class);
+    }
+
     /** BR-WLT-002 — never includes {@code publicDerivationMaterial}; see {@link #getPublicMaterial}. */
     public WalletResponse get(UUID walletId) {
         return execute(HttpRequest.get("/v1/wallets/" + walletId), WalletResponse.class);

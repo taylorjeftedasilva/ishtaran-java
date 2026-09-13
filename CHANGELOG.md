@@ -5,9 +5,29 @@ still change before a stable 1.0.0.
 
 ## [Unreleased]
 
+## [0.1.6] — 2026-09-12
+
+- **Added** — `client.transfers()` (`TransfersResource#request`/`#get`) — first-class Transfer
+  (PROMPT 7.1, SPEC-TRANSFER-001/002, BR-TRF-008): an Account's own self-custody wallet sends to
+  either an internal Account (`destinationAccountId`) or an arbitrary external address
+  (`destinationAddress`, never requiring pre-registration). The Platform Fee is always `ON_TOP` —
+  the recipient always receives exactly the requested `amount`, the fee is charged separately from
+  the sender (`platformFeeAmount`/`platformFeePercentage` on the response). `request(...)` ends in
+  `AWAITING_SIGNATURE`, never synchronously `CONFIRMED` — `TransferResponse.signingRequestId()` is
+  the real `SigningRequest` to fetch (`client.signingRequests().get(...)`), sign each Leg's
+  canonical hash locally, and submit back (`submitSignedTransaction(...)`). New `OperationType`/
+  `TransferStatus` classes.
+- **Added** — `client.wallets().registerForAccount(organizationId, accountId, applicationId,
+  networkId, scheme, publicDerivationMaterial, idempotencyKey)` — registers the execution/signing
+  identity OWNED by a specific Account (its own xpub, generated independently client-side — never
+  the same material as the Application's shared `register`). Required once before that Account can
+  ever be the `sourceAccountId` of a `transfers().request(...)` call.
+- **Added** — `OperationType` and a new overload of `client.settlements().executeSettlement(
+  transactionId, amount, idempotencyKey, operationType)` — selects which Platform Fee rate applies
+  (the existing 3-arg overload is preserved unchanged, defaulting to `MARKETPLACE`).
 - **Fixed** — `UserAgent.DEFAULT` (`ishtaran-java/<version>`, sent on every request) was frozen at
   `0.1.3` since that release — every subsequent version sent a stale version string, found during
-  a public-knowledge audit. `SDK_VERSION` now correctly reads `0.1.5`.
+  a public-knowledge audit. `SDK_VERSION` now correctly reads `0.1.6`.
 
 ## [0.1.5] — 2026-09-11
 
